@@ -14,21 +14,9 @@ Load from File – Restore a previously saved canvas state.
 Save Canvas – Export the current drawing to a file.
 Undo/Redo Actions – Support for undoing and redoing actions to allow error correction.
 🚀 How to Run
-Clone the repository:
-sh
-Копировать
-Редактировать
-git clone <repository_url>
-Navigate to the project directory and build the application:
-sh
-Копировать
-Редактировать
+Clone the repository: git clone <repository_url>
 cd ConsolePaint  
 dotnet build  
-Run the program:
-sh
-Копировать
-Редактировать
-dotnet run  
+Run the program: sh dotnet run  
 📌 Usage
 The program operates through text commands, allowing users to interact with the canvas and perform various drawing operations.

@@ -1,0 +1,40 @@
+<mxfile host="Electron" modified="2025-02-27T08:18:42.493Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.0 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="8lyTuKSjMsWHwJ4x-y_i" version="24.4.0" type="device">
+  <diagram name="Страница — 1" id="wHyH0F_S1m4ts1jfRDfm">
+    <mxGraphModel dx="1050" dy="629" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="EkHbindbIvyIkgaxzM3A-1" value="Rectangle" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="200" width="410" height="394" as="geometry" />
+        </mxCell>
+        <mxCell id="EkHbindbIvyIkgaxzM3A-2" value="string Type =&amp;gt; &quot;Rectangle&quot;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="EkHbindbIvyIkgaxzM3A-1">
+          <mxGeometry y="26" width="410" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="EkHbindbIvyIkgaxzM3A-3" value="int Width" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="EkHbindbIvyIkgaxzM3A-1">
+          <mxGeometry y="90" width="410" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="EkHbindbIvyIkgaxzM3A-4" value="int X" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="EkHbindbIvyIkgaxzM3A-1">
+          <mxGeometry y="148" width="410" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="EkHbindbIvyIkgaxzM3A-5" value="int Y" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="EkHbindbIvyIkgaxzM3A-1">
+          <mxGeometry y="220" width="410" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="EkHbindbIvyIkgaxzM3A-6" value="void Draw(char[,] canvas, int canvasWidth, int canvasHeight)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="EkHbindbIvyIkgaxzM3A-1">
+          <mxGeometry y="278" width="410" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="EkHbindbIvyIkgaxzM3A-9" value="int Height" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="EkHbindbIvyIkgaxzM3A-1">
+          <mxGeometry y="336" width="410" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="EkHbindbIvyIkgaxzM3A-7" value="Shape" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="450" y="50" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="EkHbindbIvyIkgaxzM3A-8" value="" style="endArrow=diamondThin;endFill=0;endSize=24;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="504.5" y="200" as="sourcePoint" />
+            <mxPoint x="504.5" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

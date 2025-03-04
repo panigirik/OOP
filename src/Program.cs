@@ -73,7 +73,22 @@
                         drawingService.MoveShape();
                         break;
                     case "9":
-                        drawingService.FillShape();
+                        Console.WriteLine("Enter shape name: ");
+                        string shapeName = Console.ReadLine();
+                        Console.WriteLine("Enter fill character: ");
+                        char fillChar;
+
+                        // Convert the string input to a char
+                        string inputChar = Console.ReadLine();
+                        if (!string.IsNullOrEmpty(inputChar) && inputChar.Length == 1)
+                        {
+                            fillChar = inputChar[0]; // Take the first character
+                            drawingService.FillShape(shapeName, fillChar);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid fill character. Please enter a single character.");
+                        }
                         break;
                     default:
                         Console.WriteLine("Invalid input, try again.");

@@ -133,23 +133,32 @@ public class DrawingService
         RedrawCanvas();
     }
 
-    public void FillShape()
+    public void FillShape(string shapeName, char fillChar)
     {
-        Console.Write("Enter shape name to fill: ");
-        string name = Console.ReadLine();
-        if (!shapes.ContainsKey(name))
+        if (!shapes.ContainsKey(shapeName))
         {
             Console.WriteLine("Shape not found.");
             return;
         }
 
-        Console.Write("Enter fill character: ");
-        char fillChar = Console.ReadKey().KeyChar;
-        Console.WriteLine();
+        Shape shape = shapes[shapeName];
 
-        shapes[name].Fill(canvas, fillChar);
-        RedrawCanvas();
+        for (int y = 0; y < CanvasHeight; y++)
+        {
+            for (int x = 0; x < CanvasWidth; x++)
+            {
+                if (shape.IsInside(x, y)) 
+                {
+                    canvas[y, x] = fillChar;
+                }
+            }
+        }
+
+        DrawCanvas();
     }
+
+
+
 
     
     public void Undo()

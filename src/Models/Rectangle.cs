@@ -52,18 +52,27 @@
 
         public override void Fill(char[,] canvas, char fillChar)
         {
-            for (int i = 1; i < Height - 1; i++)
-            {
-                for (int j = 1; j < Width - 1; j++)
-                {
-                    int canvasX = x + j;
-                    int canvasY = y + i;
+            int startX = (canvas.GetLength(1) - Width) / 2;
+            int startY = (canvas.GetLength(0) - Height) / 2;
 
-                    if (canvasX >= 0 && canvasX < canvas.GetLength(1) && canvasY >= 0 && canvasY < canvas.GetLength(0))
-                    {
-                        canvas[canvasY, canvasX] = fillChar;
-                    }
-                }
-            }
+            int fillStartX = startX + 1;
+            int fillStartY = startY + 1;
+
+            if (fillStartX >= canvas.GetLength(1) || fillStartY >= canvas.GetLength(0))
+                return;
+
+            if (canvas[fillStartY, fillStartX] != ' ') // Уже занято
+                return;
+
+            FloodFill(canvas, fillStartX, fillStartY, fillChar);
         }
+        
+        public override bool IsInside(int testX, int testY)
+        {
+            // Проверка, находится ли точка внутри прямоугольника
+            return testX >= x && testX < x + Width && testY >= y && testY < y + Height;
+        }
+
+
+
     }

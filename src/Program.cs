@@ -33,6 +33,8 @@
                 Console.WriteLine("6. Load Canvas");
                 Console.WriteLine("7. Exit");
                 Console.WriteLine("8. Move Shape");
+                Console.WriteLine("9. Fill Shape");
+                
                 Console.Write("Select an option: ");
 
                 string input = Console.ReadLine();
@@ -69,6 +71,9 @@
                         return;
                     case "8":
                         drawingService.MoveShape();
+                        break;
+                    case "9":
+                        drawingService.FillShape();
                         break;
                     default:
                         Console.WriteLine("Invalid input, try again.");

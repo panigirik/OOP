@@ -28,7 +28,7 @@ public class DrawingService
         }
     }
 
-    public void DrawCanvas()
+ public void DrawCanvas()
     {
         Console.Clear();
         Console.WriteLine("+" + new string('-', CanvasWidth) + "+");
@@ -39,10 +39,8 @@ public class DrawingService
             {
                 Console.Write(canvas[i, j]);
             }
-
             Console.WriteLine("|");
         }
-
         Console.WriteLine("+" + new string('-', CanvasWidth) + "+");
     }
 
@@ -69,9 +67,8 @@ public class DrawingService
                 Console.Write("Enter border character: ");
                 char rectBorder = Console.ReadKey().KeyChar;
                 Console.WriteLine();
-                shape = new Rectangle(width, height, rectBorder, x, y);
+                shape = new Rectangle(width, height, rectBorder, x, y, name);
                 break;
-
             case "circle":
                 Console.Write("Enter radius: ");
                 int radius = int.Parse(Console.ReadLine());
@@ -80,7 +77,6 @@ public class DrawingService
                 Console.WriteLine();
                 shape = new Circle(radius, circBorder, x, y);
                 break;
-
             case "triangle":
                 Console.Write("Enter height: ");
                 int triHeight = int.Parse(Console.ReadLine());
@@ -89,19 +85,18 @@ public class DrawingService
                 Console.Write("Enter border character: ");
                 char triBorder = Console.ReadKey().KeyChar;
                 Console.WriteLine();
-                shape = new Triangle(triHeight, triBorder, x, y, triWidth);
+                shape = new Triangle(triHeight, triBorder, x, y, triWidth, name); // Убедитесь, что тут создается Triangle, а не Circle
                 break;
 
             default:
                 Console.WriteLine("Invalid shape type.");
                 return;
         }
-
-        // Сохраняем состояние перед добавлением фигуры
         historyService.SaveState(new Dictionary<string, Shape>(shapes)); 
         shapes[name] = shape;
         RedrawCanvas();
     }
+
 
     public void RemoveShape(string name)
     {
@@ -138,6 +133,25 @@ public class DrawingService
         RedrawCanvas();
     }
 
+    public void FillShape()
+    {
+        Console.Write("Enter shape name to fill: ");
+        string name = Console.ReadLine();
+        if (!shapes.ContainsKey(name))
+        {
+            Console.WriteLine("Shape not found.");
+            return;
+        }
+
+        Console.Write("Enter fill character: ");
+        char fillChar = Console.ReadKey().KeyChar;
+        Console.WriteLine();
+
+        shapes[name].Fill(canvas, fillChar);
+        RedrawCanvas();
+    }
+
+    
     public void Undo()
     {
         historyService.Undo(ref shapes); // передаем всю коллекцию shapes в Undo
@@ -154,13 +168,12 @@ public class DrawingService
 
 
     public void RedrawCanvas()
+    {
+        InitializeCanvas();
+        foreach (var shape in shapes.Values)
         {
-            InitializeCanvas();
-            foreach (var shape in shapes.Values)
-            {
-                shape.DrawOnCanvas(canvas);
-            }
-
-            DrawCanvas();
+            shape.DrawOnCanvas(canvas);
         }
+        DrawCanvas();
+    }
     }

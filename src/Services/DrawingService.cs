@@ -28,7 +28,7 @@ public class DrawingService
         }
     }
 
- public void DrawCanvas()
+    public void DrawCanvas()
     {
         Console.Clear();
         Console.WriteLine("+" + new string('-', CanvasWidth) + "+");
@@ -98,6 +98,14 @@ public class DrawingService
     }
 
 
+    public Shape GetShape(string name)
+    {
+        if (shapes.ContainsKey(name))
+            return shapes[name];
+        return null;
+    }
+
+    
     public void RemoveShape(string name)
     {
         if (shapes.Remove(name))

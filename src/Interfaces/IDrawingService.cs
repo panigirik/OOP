@@ -1,13 +1,15 @@
-﻿using ConsolePaint.Models;
-
+﻿
 namespace ConsolePaint.Interfaces;
 
 public interface IDrawingService
 {
-    List<Shape> Shapes { get; }
-    char FillCharacter { get; set; }
+    void DrawCanvas();
 
-    void DrawShape();
-    void RenderAllShapes(int canvasWidth, int canvasHeight);
-    void SetFillCharacter(char fillChar);
+    void AddShape();
+
+    void RemoveShape(string name);
+
+    void MoveShape();
+
+    void FillShape(string shapeName, char fillChar);
 }

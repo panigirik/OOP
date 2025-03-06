@@ -2,6 +2,9 @@
 
 public interface IFileService
 {
-    void SaveCanvas(char[,] canvas, string filePath);
     char[,] LoadCanvas(string filePath);
+
+    void SaveCanvas(char[,] canvas);
+    
+    
 }

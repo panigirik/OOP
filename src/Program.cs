@@ -1,4 +1,6 @@
-﻿namespace ConsolePaint
+﻿using ConsolePaint.Services;
+
+namespace ConsolePaint
 {
     class Program
     {
@@ -7,10 +9,8 @@
             var drawingService = DrawingService.Instance;
             FileService fileService = new FileService();
 
-            // Инициализация канвы (например, 150x150)
             char[,] canvas = new char[150, 150];
 
-            // Заполним канву символами для теста
             for (int i = 0; i < canvas.GetLength(0); i++)
             {
                 for (int j = 0; j < canvas.GetLength(1); j++)
@@ -19,7 +19,6 @@
                 }
             }
 
-            // Отображаем канву для проверки
             drawingService.DrawCanvas();
 
             while (true)
@@ -54,17 +53,15 @@
                         drawingService.Redo();
                         break;
                     case "5":
-                        // Передаем канву в сохранение
-                        fileService.SaveCanvas(canvas);
+                       fileService.SaveCanvas(canvas);
                         break;
                     case "6":
                         Console.Write("Enter the file path: ");
                         string filePath = Console.ReadLine();
-                        // Загружаем канву из файла
                         char[,] loadedCanvas = fileService.LoadCanvas(filePath);
                         if (loadedCanvas != null)
                         {
-                            canvas = loadedCanvas; // Обновляем канву
+                            canvas = loadedCanvas; 
                         }
                         break;
                     case "7":
@@ -78,11 +75,10 @@
                         Console.WriteLine("Enter fill character: ");
                         char fillChar;
 
-                        // Convert the string input to a char
                         string inputChar = Console.ReadLine();
                         if (!string.IsNullOrEmpty(inputChar) && inputChar.Length == 1)
                         {
-                            fillChar = inputChar[0]; // Take the first character
+                            fillChar = inputChar[0]; 
                             drawingService.FillShape(shapeName, fillChar);
                         }
                         else

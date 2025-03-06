@@ -1,8 +1,12 @@
-﻿namespace ConsolePaint.Interfaces;
+﻿using ConsolePaint.Models;
+
+namespace ConsolePaint.Interfaces;
 
 public interface IHistoryService
 {
-    void SaveState(char[,] currentState);
-    void Undo(ref char[,] canvas);
-    void Redo(ref char[,] canvas);
+    void SaveState(Dictionary<string, Shape> currentState);
+
+    void Undo(ref Dictionary<string, Shape> shapes);
+
+    void Redo(ref Dictionary<string, Shape> shapes);
 }

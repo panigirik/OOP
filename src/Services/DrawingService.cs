@@ -1,7 +1,9 @@
-﻿using ConsolePaint.Models;
-using ConsolePaint.Services;
+﻿using ConsolePaint.Interfaces;
+using ConsolePaint.Models;
 
-public class DrawingService
+namespace ConsolePaint.Services;
+
+public class DrawingService: IDrawingService
 {
     private static DrawingService _instance;
     private Dictionary<string, Shape> shapes = new();
@@ -85,7 +87,7 @@ public class DrawingService
                 Console.Write("Enter border character: ");
                 char triBorder = Console.ReadKey().KeyChar;
                 Console.WriteLine();
-                shape = new Triangle(triHeight, triBorder, x, y, triWidth, name); // Убедитесь, что тут создается Triangle, а не Circle
+                shape = new Triangle(triHeight, triBorder, x, y, triWidth, name); 
                 break;
 
             default:
@@ -193,4 +195,4 @@ public class DrawingService
         }
         DrawCanvas();
     }
-    }
+}

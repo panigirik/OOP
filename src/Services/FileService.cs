@@ -1,33 +1,28 @@
-﻿using System;
-using System.IO;
+﻿using ConsolePaint.Interfaces;
 
-public class FileService
+public class FileService: IFileService
 {
     private const string DefaultFileName = "DRAW.txt";
-
-    // Сохраняем содержимое канвы в файл
+    
     public void SaveCanvas(char[,] canvas)
     {
         string filePath = Path.Combine(Directory.GetCurrentDirectory(), DefaultFileName);
         
         try
         {
-            // Логируем информацию о канве перед записью
             int rows = canvas.GetLength(0);
             int cols = canvas.GetLength(1);
             Console.WriteLine($"Saving canvas to {filePath}. Canvas size: {rows}x{cols}");
 
             using (StreamWriter writer = new StreamWriter(filePath))
             {
-                // Пройдем по всей канве и записываем в файл
                 for (int i = 0; i < rows; i++)
                 {
                     for (int j = 0; j < cols; j++)
                     {
-                        // Записываем каждый символ канвы или пробел, если символ пустой
                         writer.Write(canvas[i, j] == '\0' ? ' ' : canvas[i, j]);
                     }
-                    writer.WriteLine(); // Каждая строка канвы переходит на новую строку в файле
+                    writer.WriteLine(); 
                 }
             }
 
@@ -39,7 +34,6 @@ public class FileService
         }
     }
 
-    // Загружаем канву из файла
     public char[,] LoadCanvas(string filePath)
     {
         if (!File.Exists(filePath))
@@ -54,8 +48,7 @@ public class FileService
             int rows = lines.Length;
             int cols = rows > 0 ? lines[0].Length : 0;
             char[,] loadedCanvas = new char[rows, cols];
-
-            // Загружаем данные из файла в канву
+            
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < lines[i].Length; j++)

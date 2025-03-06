@@ -53,7 +53,6 @@
         
         public override bool IsInside(int testX, int testY)
         {
-            // Проверка, находится ли точка внутри круга
             int dx = testX - x;
             int dy = testY - y;
             return (dx * dx + dy * dy <= Radius * Radius);

@@ -1,8 +1,6 @@
 ﻿using ConsolePaint.Models;
 using ConsolePaint.Services;
 using Xunit;
-using System;
-using System.IO;
 using System.Reflection;
 
 namespace ConsolePaint.Tests
@@ -17,7 +15,6 @@ namespace ConsolePaint.Tests
         }
 
         
-        // Helper method to add a shape
         public void AddShape(string shapeName, string shapeType, int x, int y, int width, int height)
         {
             char borderChar = '#';

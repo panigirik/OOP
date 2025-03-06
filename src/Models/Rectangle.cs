@@ -61,7 +61,7 @@
             if (fillStartX >= canvas.GetLength(1) || fillStartY >= canvas.GetLength(0))
                 return;
 
-            if (canvas[fillStartY, fillStartX] != ' ') // Уже занято
+            if (canvas[fillStartY, fillStartX] != ' ')
                 return;
 
             FloodFill(canvas, fillStartX, fillStartY, fillChar);
@@ -69,7 +69,6 @@
         
         public override bool IsInside(int testX, int testY)
         {
-            // Проверка, находится ли точка внутри прямоугольника
             return testX >= x && testX < x + Width && testY >= y && testY < y + Height;
         }
 

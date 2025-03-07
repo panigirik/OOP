@@ -2,92 +2,92 @@
 
 namespace ConsolePaint
 {
-    class Program
+    static class Program
     {
         static void Main()
         {
             var drawingService = DrawingService.Instance;
-            FileService fileService = new FileService();
-
             char[,] canvas = new char[150, 150];
-
+            
+            drawingService.DrawCanvas();
+            
             for (int i = 0; i < canvas.GetLength(0); i++)
             {
                 for (int j = 0; j < canvas.GetLength(1); j++)
                 {
-                    canvas[i, j] = '.';
+                    canvas[i, j] = ' ';
                 }
             }
-
-            drawingService.DrawCanvas();
-
+            
             while (true)
             {
-                Console.WriteLine("Console Paint Menu:");
-                Console.WriteLine("1. Add Shape");
-                Console.WriteLine("2. Remove Shape");
-                Console.WriteLine("3. Undo Action");
-                Console.WriteLine("4. Redo Action");
-                Console.WriteLine("5. Save Canvas");
-                Console.WriteLine("6. Load Canvas");
-                Console.WriteLine("7. Exit");
-                Console.WriteLine("8. Move Shape");
-                Console.WriteLine("9. Fill Shape");
-                
-                Console.Write("Select an option: ");
+                Console.WriteLine("меню:");
+                Console.WriteLine("1. добавить фигуру");
+                Console.WriteLine("2. удалить фигуру");
+                Console.WriteLine("3. отмена");
+                Console.WriteLine("4. повтор");
+                Console.WriteLine("5. сохранить канву");
+                Console.WriteLine("6. загрузить канву");
+                Console.WriteLine("7. выход");
+                Console.WriteLine("8. передвинуть фигуру");
+                Console.WriteLine("9. залить фигуру символом");
 
+                Console.Write("выберите действие: ");
                 string input = Console.ReadLine();
                 switch (input)
                 {
                     case "1":
                         drawingService.AddShape();
                         break;
+
                     case "2":
-                        Console.Write("Enter the shape name to remove: ");
+                        Console.Write("введите имя фигуры, которую хотите удалить: ");
                         drawingService.RemoveShape(Console.ReadLine());
                         break;
+
                     case "3":
                         drawingService.Undo();
                         break;
+
                     case "4":
                         drawingService.Redo();
                         break;
+
                     case "5":
-                       fileService.SaveCanvas(canvas);
+                        drawingService.Save();
                         break;
+
                     case "6":
-                        Console.Write("Enter the file path: ");
-                        string filePath = Console.ReadLine();
-                        char[,] loadedCanvas = fileService.LoadCanvas(filePath);
-                        if (loadedCanvas != null)
-                        {
-                            canvas = loadedCanvas; 
-                        }
+                        drawingService.LoadFromFile();
                         break;
+
                     case "7":
                         return;
+
                     case "8":
                         drawingService.MoveShape();
                         break;
+
                     case "9":
-                        Console.WriteLine("Enter shape name: ");
+                        Console.WriteLine("введите имя фигуры, которую хотите залить: ");
                         string shapeName = Console.ReadLine();
-                        Console.WriteLine("Enter fill character: ");
+                        Console.WriteLine("введите символ для заливки: ");
                         char fillChar;
 
                         string inputChar = Console.ReadLine();
                         if (!string.IsNullOrEmpty(inputChar) && inputChar.Length == 1)
                         {
-                            fillChar = inputChar[0]; 
+                            fillChar = inputChar[0];
                             drawingService.FillShape(shapeName, fillChar);
                         }
                         else
                         {
-                            Console.WriteLine("Invalid fill character. Please enter a single character.");
+                            Console.WriteLine("введите один конкретный символ");
                         }
                         break;
+
                     default:
-                        Console.WriteLine("Invalid input, try again.");
+                        Console.WriteLine("неверный ввод, попробуйте снова");
                         break;
                 }
             }

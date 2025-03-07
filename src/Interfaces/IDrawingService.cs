@@ -3,7 +3,7 @@ namespace ConsolePaint.Interfaces;
 
 public interface IDrawingService
 {
-    void DrawCanvas();
+    void DrawCanvas(bool saveToFile = false);
 
     void AddShape();
 

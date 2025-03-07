@@ -3,7 +3,7 @@ using ConsolePaint.Models;
 using ConsolePaint.Services;
 using Xunit;
 
-namespace ConsolePaint.Tests
+namespace ConsolePaint.Tests.Tests.DrawingServiceTests
 {
     public class AddShapeHandlerTests
     {

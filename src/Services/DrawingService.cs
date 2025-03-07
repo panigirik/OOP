@@ -10,7 +10,7 @@ public class DrawingService: IDrawingService
     private HistoryService historyService = new();
     private const int CanvasWidth = 150;
     private const int CanvasHeight = 150;
-    private char[,] canvas = new char[CanvasHeight, CanvasWidth];
+    private char[,] _canvas = new char[CanvasHeight, CanvasWidth];
 
     private DrawingService()
     {
@@ -25,12 +25,12 @@ public class DrawingService: IDrawingService
         {
             for (int j = 0; j < CanvasWidth; j++)
             {
-                canvas[i, j] = ' ';
+                _canvas[i, j] = ' ';
             }
         }
     }
 
-    public void DrawCanvas()
+    public void DrawCanvas(bool saveToFile = false)
     {
         Console.Clear();
         Console.WriteLine("+" + new string('-', CanvasWidth) + "+");
@@ -39,7 +39,7 @@ public class DrawingService: IDrawingService
             Console.Write("|");
             for (int j = 0; j < CanvasWidth; j++)
             {
-                Console.Write(canvas[i, j]);
+                Console.Write(_canvas[i, j]);
             }
             Console.WriteLine("|");
         }
@@ -48,56 +48,56 @@ public class DrawingService: IDrawingService
 
     public void AddShape()
     {
-        Console.Write("Enter shape name: ");
+        Console.Write("введите имя фигруы: ");
         string name = Console.ReadLine();
-        Console.Write("Select shape type (rectangle, circle, triangle): ");
+        Console.Write("введите тип фигуры (rectangle, circle, triangle): ");
         string type = Console.ReadLine().ToLower();
-        Console.Write("Enter X coordinate: ");
+        Console.Write("введите x: ");
         int x = int.Parse(Console.ReadLine());
-        Console.Write("Enter Y coordinate: ");
+        Console.Write("введите y: ");
         int y = int.Parse(Console.ReadLine());
 
-        Shape shape = null;
+        Shape shape;
 
         switch (type)
         {
             case "rectangle":
-                Console.Write("Enter width: ");
+                Console.Write("введите ширину: ");
                 int width = int.Parse(Console.ReadLine());
                 Console.Write("Enter height: ");
                 int height = int.Parse(Console.ReadLine());
-                Console.Write("Enter border character: ");
+                Console.Write("введите символ границы: ");
                 char rectBorder = Console.ReadKey().KeyChar;
                 Console.WriteLine();
                 shape = new Rectangle(width, height, rectBorder, x, y, name);
                 break;
             case "circle":
-                Console.Write("Enter radius: ");
+                Console.Write("введите радиус: ");
                 int radius = int.Parse(Console.ReadLine());
-                Console.Write("Enter border character: ");
+                Console.Write("введите символ границы: ");
                 char circBorder = Console.ReadKey().KeyChar;
                 Console.WriteLine();
                 shape = new Circle(radius, circBorder, x, y);
                 break;
             case "triangle":
-                Console.Write("Enter height: ");
+                Console.Write("введите высоту: ");
                 int triHeight = int.Parse(Console.ReadLine());
                 Console.Write("Enter width: ");
                 int triWidth = int.Parse(Console.ReadLine());
-                Console.Write("Enter border character: ");
+                Console.Write("введите символ границы: ");
                 char triBorder = Console.ReadKey().KeyChar;
                 Console.WriteLine();
                 shape = new Triangle(triHeight, triBorder, x, y, triWidth, name); 
                 break;
 
             default:
-                Console.WriteLine("Invalid shape type.");
+                Console.WriteLine("несуществующий тип фигуры");
                 return;
         }
         historyService.SaveState(new Dictionary<string, Shape>(shapes)); 
         shapes[name] = shape;
-        RedrawCanvas();
-    }
+        RedrawCanvas(true);
+        }
 
 
     public Shape GetShape(string name)
@@ -116,23 +116,23 @@ public class DrawingService: IDrawingService
         }
         else
         {
-            Console.WriteLine("Shape not found.");
+            Console.WriteLine("фигура не найдена");
         }
     }
 
     public void MoveShape()
     {
-        Console.Write("Enter the shape name to move: ");
+        Console.Write("введите название фигуры, для перемещения ");
         string name = Console.ReadLine();
         if (!shapes.ContainsKey(name))
         {
-            Console.WriteLine("Shape not found.");
+            Console.WriteLine("фигура не найдена");
             return;
         }
 
-        Console.Write("Enter new X coordinate: ");
+        Console.Write("введите новую x: ");
         int newX = int.Parse(Console.ReadLine());
-        Console.Write("Enter new Y coordinate: ");
+        Console.Write("введите новую y: ");
         int newY = int.Parse(Console.ReadLine());
 
         Shape shape = shapes[name];
@@ -159,7 +159,7 @@ public class DrawingService: IDrawingService
             {
                 if (shape.IsInside(x, y)) 
                 {
-                    canvas[y, x] = fillChar;
+                    _canvas[y, x] = fillChar;
                 }
             }
         }
@@ -168,31 +168,54 @@ public class DrawingService: IDrawingService
     }
 
 
+    public void LoadFromFile()
+    {
+        FileService fileService = new FileService();
+        Console.Write("Введите путь к файлу: ");
+        string filePath = Console.ReadLine();
+        char[,] loadedCanvas = fileService.LoadCanvas(filePath, CanvasHeight, CanvasWidth);
+
+        if (loadedCanvas != null)
+        {
+            _canvas = loadedCanvas;
+            DrawCanvas();
+        }
+    }
+
 
 
     
     public void Undo()
     {
-        historyService.Undo(ref shapes); // передаем всю коллекцию shapes в Undo
+        historyService.Undo(ref shapes); 
         RedrawCanvas();
     }
 
     public void Redo()
     {
-        historyService.Redo(ref shapes); // передаем всю коллекцию shapes в Redo
+        historyService.Redo(ref shapes); 
         RedrawCanvas();
     }
 
+    
+    public void Save(bool saveToFile = true)
+    {
+        historyService.Redo(ref shapes); 
+        if (saveToFile)
+        {
+            FileService fileService = new FileService();
+            fileService.SaveCanvas(_canvas);
+        }
+    }
 
 
-
-    public void RedrawCanvas()
+    public void RedrawCanvas(bool saveToFile = true)
     {
         InitializeCanvas();
         foreach (var shape in shapes.Values)
         {
-            shape.DrawOnCanvas(canvas);
+            shape.DrawOnCanvas(_canvas);
         }
-        DrawCanvas();
+        DrawCanvas(saveToFile);
     }
 }

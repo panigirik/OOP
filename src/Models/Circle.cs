@@ -80,5 +80,11 @@
                 }
             }
         }
+        
+        public override string SaveToString()
+        {
+            return $"Rectangle:{Name},{x},{y},{BorderChar}"; // переписать потом
+        }
+        
     }
 }

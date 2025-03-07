@@ -1,6 +1,6 @@
-﻿   using ConsolePaint.Models;
+﻿    namespace ConsolePaint.Models;
 
-   public class Rectangle : Shape
+    public class Rectangle : Shape
     {
         public int Width { get; set; }
         public int Height { get; set; }
@@ -72,6 +72,9 @@
             return testX >= x && testX < x + Width && testY >= y && testY < y + Height;
         }
 
-
+        public override string SaveToString()
+        {
+            return $"Rectangle:{Name},{x},{y},{Width},{Height},{BorderChar}";
+        }
 
     }

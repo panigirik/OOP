@@ -41,6 +41,8 @@
         {
             return false;
         }
+        
+        public abstract string SaveToString();
 
     }
 }

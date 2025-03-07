@@ -87,6 +87,11 @@
             return (areaABC == areaPAB + areaPBC + areaPCA);
         }
 
+        
+        public override string SaveToString()
+        {
+            return $"Rectangle:{Name},{x},{y},{Width},{Height},{BorderChar}"; // переписать потом
+        }
 
     }
 }

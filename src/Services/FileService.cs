@@ -1,69 +1,89 @@
 ﻿using ConsolePaint.Interfaces;
 
-public class FileService: IFileService
+namespace ConsolePaint.Services
 {
-    private const string DefaultFileName = "DRAW.txt";
-    
-    public void SaveCanvas(char[,] canvas)
+    public class FileService : IFileService
     {
-        string filePath = Path.Combine(Directory.GetCurrentDirectory(), DefaultFileName);
-        
-        try
+        public void SaveCanvas(char[,] canvas)
         {
-            int rows = canvas.GetLength(0);
-            int cols = canvas.GetLength(1);
-            Console.WriteLine($"Saving canvas to {filePath}. Canvas size: {rows}x{cols}");
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "canvas.txt");
 
-            using (StreamWriter writer = new StreamWriter(filePath))
+            try
             {
-                for (int i = 0; i < rows; i++)
+                using (StreamWriter writer = new StreamWriter(filePath))
                 {
-                    for (int j = 0; j < cols; j++)
+                    int rows = canvas.GetLength(0);
+                    int cols = canvas.GetLength(1);
+
+                    for (int i = 0; i < rows; i++)
                     {
-                        writer.Write(canvas[i, j] == '\0' ? ' ' : canvas[i, j]);
+                        bool hasDrawing = false;
+
+                        for (int j = 0; j < cols; j++)
+                        {
+                            if (canvas[i, j] != ' ') 
+                            {
+                                writer.Write(canvas[i, j]);
+                                hasDrawing = true;
+                            }
+                            else if (hasDrawing) 
+                            {
+                               writer.Write(' ');
+                            }
+                        }
+
+                        if (hasDrawing) writer.WriteLine();
                     }
-                    writer.WriteLine(); 
                 }
+
+                Console.WriteLine($"канва сохранена {filePath}");
             }
-
-            Console.WriteLine($"Canvas successfully saved to {filePath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error saving canvas: {ex.Message}");
-        }
-    }
-
-    public char[,] LoadCanvas(string filePath)
-    {
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine("Error: File not found.");
-            return null;
-        }
-
-        try
-        {
-            string[] lines = File.ReadAllLines(filePath);
-            int rows = lines.Length;
-            int cols = rows > 0 ? lines[0].Length : 0;
-            char[,] loadedCanvas = new char[rows, cols];
-            
-            for (int i = 0; i < rows; i++)
+            catch (Exception ex)
             {
-                for (int j = 0; j < lines[i].Length; j++)
-                {
-                    loadedCanvas[i, j] = lines[i][j];
-                }
+                Console.WriteLine($"не удалось сохранить канву: {ex.Message}");
+            }
+        }
+
+
+
+        public char[,] LoadCanvas(string filePath, int canvasHeight, int canvasWidth)
+        {
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("такой файл не найден");
+                return null;
             }
 
-            Console.WriteLine("Canvas successfully loaded from file.");
-            return loadedCanvas;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading canvas: {ex.Message}");
-            return null;
+            try
+            {
+                char[,] loadedCanvas = new char[canvasHeight, canvasWidth];
+
+                for (int i = 0; i < canvasHeight; i++)
+                {
+                    for (int j = 0; j < canvasWidth; j++)
+                    {
+                        loadedCanvas[i, j] = ' ';
+                    }
+                }
+
+                string[] lines = File.ReadAllLines(filePath);
+
+                for (int i = 0; i < Math.Min(lines.Length, canvasHeight); i++)
+                {
+                    for (int j = 0; j < Math.Min(lines[i].Length, canvasWidth); j++)
+                    {
+                        loadedCanvas[i, j] = lines[i][j];
+                    }
+                }
+
+                Console.WriteLine("Canvas successfully loaded from file.");
+                return loadedCanvas;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading canvas: {ex.Message}");
+                return null;
+            }
         }
     }
 }

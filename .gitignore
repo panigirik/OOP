@@ -1,66 +1,38 @@
-# User-specific files
+# Ignore build output folders
+/bin/
+/obj/
+
+# Ignore Rider and Visual Studio specific files
 .idea/
 .vscode/
-
-# User-specific files for Visual Studio for Mac
-.vscode/settings.json
-
-# User-specific files for Visual Studio
 .vs/
-.vs2019/
-.vs2017/
-.vs2015/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-# User-specific files for Rider
-.idea/
+# Ignore compiled files and logs
+*.log
+*.dll
+*.exe
+*.pdb
+*.cache
 
-# Windows image file caches
-Thumbs.db
+# Ignore NuGet packages
+*.nupkg
+packages/
+.nuget/
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows Installer (Visual Studio) build caches
-.vs2019/
-
-# Windows debug files
-[Dd]ebug/
-[Dd]ebugPublic/
-[Dd]ebugSymbols/
-
-# Windows release files
-[Dd]ebugRelease/
-
-# Windows Temporary Files
+# Ignore temporary files
 *.swp
 *.swo
 *.bak
+*.tmp
 
-# Windows build files
-bin/
-obj/
-
-# Windows Visual Studio project files
-.vs2019/
-
-# User-specific files
-.idea/
-
-# Rider configuration files
-.idea/
-
-# ASP.NET temporary files
+# Ignore generated files
 project.lock.json
 project.fragment.lock.json
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# User-specific files
-.vscode/
+# Ignore test results
+TestResults/
+*.TestResults/

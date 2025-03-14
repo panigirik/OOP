@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "ConsoleWord.Infrastracture/1.0.0": {
+        "dependencies": {
+          "ConsoleWord.Core": "1.0.0"
+        },
+        "runtime": {
+          "ConsoleWord.Infrastracture.dll": {}
+        }
+      },
+      "ConsoleWord.Core/1.0.0": {
+        "runtime": {
+          "ConsoleWord.Core.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ConsoleWord.Infrastracture/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ConsoleWord.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

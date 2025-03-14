@@ -1,0 +1,73 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "ConsoleWord.Presentaion/1.0.0": {
+        "dependencies": {
+          "ConsoleWord.Application": "1.0.0",
+          "ConsoleWord.Infrastracture": "1.0.0"
+        },
+        "runtime": {
+          "ConsoleWord.Presentaion.dll": {}
+        }
+      },
+      "ConsoleWord.Application/1.0.0": {
+        "dependencies": {
+          "ConsoleWord.Core": "1.0.0",
+          "ConsoleWord.Infrastracture": "1.0.0"
+        },
+        "runtime": {
+          "ConsoleWord.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "ConsoleWord.Core/1.0.0": {
+        "runtime": {
+          "ConsoleWord.Core.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "ConsoleWord.Infrastracture/1.0.0": {
+        "dependencies": {
+          "ConsoleWord.Core": "1.0.0"
+        },
+        "runtime": {
+          "ConsoleWord.Infrastracture.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ConsoleWord.Presentaion/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ConsoleWord.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ConsoleWord.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ConsoleWord.Infrastracture/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

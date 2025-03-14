@@ -1,0 +1,17 @@
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\bin\Debug\net8.0\ConsoleWord.Application.deps.json
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\bin\Debug\net8.0\ConsoleWord.Application.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\bin\Debug\net8.0\ConsoleWord.Application.pdb
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\obj\Debug\net8.0\ConsoleWord.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\obj\Debug\net8.0\ConsoleWord.Application.AssemblyInfoInputs.cache
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\obj\Debug\net8.0\ConsoleWord.Application.AssemblyInfo.cs
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\obj\Debug\net8.0\ConsoleWord.Application.csproj.CoreCompileInputs.cache
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\obj\Debug\net8.0\ConsoleWord.Application.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\obj\Debug\net8.0\refint\ConsoleWord.Application.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\obj\Debug\net8.0\ConsoleWord.Application.pdb
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\obj\Debug\net8.0\ref\ConsoleWord.Application.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\bin\Debug\net8.0\ConsoleWord.Core.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\bin\Debug\net8.0\ConsoleWord.Infrastracture.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\bin\Debug\net8.0\ConsoleWord.Core.pdb
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\bin\Debug\net8.0\ConsoleWord.Infrastracture.pdb
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\obj\Debug\net8.0\ConsoleWord.Application.csproj.AssemblyReference.cache
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Application\obj\Debug\net8.0\ConsoleW.46AE8800.Up2Date

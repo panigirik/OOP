@@ -1,0 +1,15 @@
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\bin\Debug\net8.0\ConsoleWord.Infrastracture.deps.json
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\bin\Debug\net8.0\ConsoleWord.Infrastracture.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\bin\Debug\net8.0\ConsoleWord.Infrastracture.pdb
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\obj\Debug\net8.0\ConsoleWord.Infrastracture.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\obj\Debug\net8.0\ConsoleWord.Infrastracture.AssemblyInfoInputs.cache
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\obj\Debug\net8.0\ConsoleWord.Infrastracture.AssemblyInfo.cs
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\obj\Debug\net8.0\ConsoleWord.Infrastracture.csproj.CoreCompileInputs.cache
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\obj\Debug\net8.0\ConsoleWord.Infrastracture.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\obj\Debug\net8.0\refint\ConsoleWord.Infrastracture.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\obj\Debug\net8.0\ConsoleWord.Infrastracture.pdb
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\obj\Debug\net8.0\ref\ConsoleWord.Infrastracture.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\bin\Debug\net8.0\ConsoleWord.Core.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\bin\Debug\net8.0\ConsoleWord.Core.pdb
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\obj\Debug\net8.0\ConsoleWord.Infrastracture.csproj.AssemblyReference.cache
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Infrastracture\obj\Debug\net8.0\ConsoleW.72117178.Up2Date

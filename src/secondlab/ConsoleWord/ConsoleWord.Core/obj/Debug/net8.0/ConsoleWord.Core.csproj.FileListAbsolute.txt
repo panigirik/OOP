@@ -1,0 +1,11 @@
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\bin\Debug\net8.0\ConsoleWord.Core.deps.json
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\bin\Debug\net8.0\ConsoleWord.Core.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\bin\Debug\net8.0\ConsoleWord.Core.pdb
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\ConsoleWord.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\ConsoleWord.Core.AssemblyInfoInputs.cache
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\ConsoleWord.Core.AssemblyInfo.cs
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\ConsoleWord.Core.csproj.CoreCompileInputs.cache
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\ConsoleWord.Core.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\refint\ConsoleWord.Core.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\ConsoleWord.Core.pdb
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\ref\ConsoleWord.Core.dll

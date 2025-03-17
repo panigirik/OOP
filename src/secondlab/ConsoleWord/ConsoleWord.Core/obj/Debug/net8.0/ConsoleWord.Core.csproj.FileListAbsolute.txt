@@ -9,3 +9,4 @@ C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\Conso
 C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\refint\ConsoleWord.Core.dll
 C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\ConsoleWord.Core.pdb
 C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\ref\ConsoleWord.Core.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Core\obj\Debug\net8.0\ConsoleWord.Core.csproj.AssemblyReference.cache

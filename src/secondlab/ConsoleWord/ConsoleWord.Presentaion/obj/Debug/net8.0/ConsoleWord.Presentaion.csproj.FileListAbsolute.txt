@@ -20,3 +20,6 @@ C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Presentaion\bin\Debug\net8.
 C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Presentaion\bin\Debug\net8.0\ConsoleWord.Core.pdb
 C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Presentaion\obj\Debug\net8.0\ConsoleWord.Presentaion.csproj.AssemblyReference.cache
 C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Presentaion\obj\Debug\net8.0\ConsoleW.FEEEE8B5.Up2Date
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Presentaion\bin\Debug\net8.0\System.IO.Packaging.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Presentaion\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
+C:\Users\Admin\RiderProjects\ConsoleWord\ConsoleWord.Presentaion\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll

@@ -1,11 +1,10 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using ConsoleWord.Infrastracture;
-using ConsoleWord.Core.Decorators;
 using System.Xml.Serialization;
 using System.Text.Json;
-using System.IO;
 using System.Text;
+using ConsoleWord.Application.DocumentUseCases;
 using ConsoleWord.Core.Entities;
 using ConsoleWord.Infrastracture.Formatting;
 using Spectre.Console;
@@ -18,10 +17,25 @@ namespace ConsoleWord.Application.Services
     public class DocumentService
     {
         private readonly StorageService _storageService;
+        private readonly DocumentFactory _documentFactory;
+        private readonly DocumentStorageService _documentStorageService;
+        private readonly DocumentEditor _documentEditor;
+        private readonly DocumentLoader _documentLoader;
+        private readonly InputHelper _inputHelper;
 
-        public DocumentService(StorageService storageService)
+        public DocumentService(StorageService storageService,
+            DocumentFactory documentFactory,
+            DocumentStorageService documentStorageService,
+            DocumentEditor documentEditor,
+            DocumentLoader documentLoader,
+            InputHelper inputHelper)
         {
             _storageService = storageService;
+            _documentFactory = documentFactory;
+            _documentStorageService = documentStorageService;
+            _documentEditor = documentEditor;
+            _documentLoader = documentLoader;
+            _inputHelper = inputHelper;
         }
 
         public void CreateAndSaveDocument()
@@ -48,11 +62,11 @@ namespace ConsoleWord.Application.Services
             if (storageType == "local")
             {
                 string directory = AnsiConsole.Ask<string>("Enter save directory: ");
-                savedPath = SaveDocumentLocally(document, directory, format);
+                savedPath = _documentStorageService.SaveDocumentLocally(document, directory, format);
             }
             else if (storageType == "cloud")
             {
-                SaveDocumentToCloud(document, format);
+                _documentStorageService.SaveDocumentToCloud(document, format);
                 return;
             }
             else
@@ -71,58 +85,10 @@ namespace ConsoleWord.Application.Services
             Console.ReadLine();
         }
 
-        public string GetUserInput(string prompt)
-        {
-            Console.Write(prompt);
-            string input = Console.ReadLine()?.Trim();
-            while (string.IsNullOrWhiteSpace(input))
-            {
-                Console.WriteLine("Invalid input. Please try again.");
-                Console.Write(prompt);
-                input = Console.ReadLine()?.Trim();
-            }
-            return input;
-        }
 
-        public bool AskYesNo(string prompt)
-        {
-            Console.Write(prompt);
-            string input = Console.ReadLine()?.Trim().ToLower();
 
-            while (input != "y" && input != "n")
-            {
-                Console.WriteLine("Invalid input. Please enter 'y' or 'n'.");
-                Console.Write(prompt);
-                input = Console.ReadLine()?.Trim().ToLower();
-            }
 
-            return input == "y";
-        }
 
-        private int GetValidatedInteger(string prompt)
-        {
-            int value;
-            Console.Write(prompt);
-            while (!int.TryParse(Console.ReadLine(), out value) || value <= 0)
-            {
-                Console.WriteLine("Invalid number. Please enter a positive integer.");
-                Console.Write(prompt);
-            }
-            return value;
-        }
-
-        public string GetValidDirectory(string prompt)
-        {
-            Console.Write(prompt);
-            string directory = Console.ReadLine()?.Trim();
-            while (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory))
-            {
-                Console.WriteLine("Invalid directory. Please enter a valid path.");
-                Console.Write(prompt);
-                directory = Console.ReadLine()?.Trim();
-            }
-            return directory;
-        }
         
         private Document LoadMarkdown(string filePath)
         {
@@ -141,120 +107,7 @@ namespace ConsoleWord.Application.Services
             return new Document(name, content.ToString(), "Arial", 12);
         }
 
-        
-        private void SaveAsMarkdown(Document document, string filePath)
-        {
-            var sb = new StringBuilder();
 
-            // Пример простой разметки markdown: жирный, курсив, подчеркивание
-            sb.AppendLine($"# {document.Name}");
-            sb.AppendLine();
-
-            // Можно применить базовые markdown-стили (как опцию — расширяемо)
-            string content = document.Content.ToString();
-
-            // Обработка базовых стилей (например, жирный шрифт как **text**)
-            if (document.IsBold) content = $"**{content}**";
-            if (document.IsItalic) content = $"*{content}*";
-            if (document.IsUnderline) content = $"<u>{content}</u>"; // Markdown не поддерживает underline напрямую
-
-            sb.AppendLine(content);
-
-            File.WriteAllText(filePath, sb.ToString());
-        }
-
-
-        public string SaveDocumentLocally(Document document, string directory, string format)
-        {
-            string filePath = Path.Combine(directory, document.Name + $".{format}");
-            try
-            {
-                switch (format)
-                {
-                    case "docx":
-                        SaveAsDocx(document, filePath);
-                        break;
-                    case "xml":
-                        SaveAsXml(document, filePath);
-                        break;
-                    case "json":
-                        SaveAsJson(document, filePath);
-                        break;
-                    case "md":
-                        SaveAsMarkdown(document, filePath);
-                        break;
-                    default:
-                        Console.WriteLine("Invalid format selected.");
-                        return null;
-                }
-                Console.WriteLine($"Document saved successfully: {filePath}");
-                return filePath;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving document: {ex.Message}");
-                return null;
-            }
-        }
-
-
-        private void SaveAsDocx(Document document, string filePath)
-        {
-            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
-            {
-                MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
-                mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new Body());
-                Body body = mainPart.Document.Body;
-
-                Paragraph paragraph = new Paragraph();
-                Run run = new Run(new Text(document.Content.ToString()));
-                RunProperties runProperties = new RunProperties
-                {
-                    FontSize = new FontSize() { Val = (document.TextSize * 2).ToString() },
-                    RunFonts = new RunFonts() { Ascii = document.Font }
-                };
-                run.PrependChild(runProperties);
-
-                // These will be overridden later with ApplyTextDecorations
-                paragraph.Append(run);
-                body.Append(paragraph);
-            }
-        }
-
-        private void SaveAsXml(Document document, string filePath)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(Document));
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                serializer.Serialize(writer, document);
-            }
-
-            Console.WriteLine($"Document saved as XML successfully: {filePath}");
-        }
-
-        private void SaveAsJson(Document document, string filePath)
-        {
-            string json = JsonSerializer.Serialize(document, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, json);
-        }
-
-        public void SaveDocumentToCloud(Document document, string format)
-        {
-            _storageService.UploadToCloud(document, format);
-            Console.WriteLine("Document uploaded to cloud (stub).");
-        }
-
-
-
-
-        public string ReadDocxContent(string path)
-        {
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(path, false))
-            {
-                var body = wordDoc.MainDocumentPart.Document.Body;
-                return body.InnerText;
-            }
-        }
 
         
 
@@ -272,7 +125,7 @@ namespace ConsoleWord.Application.Services
             while (true)
             {
                 AnsiConsole.Clear();
-                string content = ReadDocxContent(path);
+                string content = _documentEditor.ReadDocxContent(path);
                 AnsiConsole.MarkupLine("[bold]--- Document Content ---[/]");
                 AnsiConsole.WriteLine(content);
                 AnsiConsole.MarkupLine("[bold]------------------------[/]");
@@ -295,11 +148,11 @@ namespace ConsoleWord.Application.Services
                 {
                     case "Append Text":
                         string toAppend = AnsiConsole.Ask<string>("Enter text to append:");
-                        AppendTextToDocx(path, toAppend);
+                        _documentEditor.AppendTextToDocx(path, toAppend);
                         break;
 
                     case "Delete All Text":
-                        ClearDocxContent(path);
+                        _documentEditor.ClearDocxContent(path);
                         break;
 
                     case "Show Content":
@@ -330,13 +183,13 @@ namespace ConsoleWord.Application.Services
                     case "1":
                         Console.Write("Enter text to append: ");
                         string newText = Console.ReadLine();
-                        AppendTextToDocx(path, newText);
+                        _documentEditor.AppendTextToDocx(path, newText);
                         break;
                     case "2":
-                        ClearDocxContent(path);
+                        _documentEditor.ClearDocxContent(path);
                         break;
                     case "3":
-                        Console.WriteLine(ReadDocxContent(path));
+                        Console.WriteLine(_documentEditor.ReadDocxContent(path));
                         break;
                     case "4":
                         return;
@@ -348,37 +201,13 @@ namespace ConsoleWord.Application.Services
         }
 
         
-        public void AppendTextToDocx(string path, string textToAppend)
-        {
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(path, true))
-            {
-                var body = wordDoc.MainDocumentPart.Document.Body;
-
-                Paragraph paragraph = new Paragraph();
-                Run run = new Run();
-                run.AppendChild(new Text(textToAppend));
-                paragraph.Append(run);
-
-                body.Append(paragraph);
-                wordDoc.MainDocumentPart.Document.Save();
-            }
-        }
 
 
-        public void ClearDocxContent(string path)
-        {
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(path, true))
-            {
-                var body = wordDoc.MainDocumentPart.Document.Body;
-                body.RemoveAllChildren();
-                wordDoc.MainDocumentPart.Document.Save();
-            }
-        }
 
         
         public Document LoadDocument()
         {
-            string filePath = GetUserInput("Enter full file path to open: ");
+            string filePath = _inputHelper.GetUserInput("Enter full file path to open: ");
             if (!File.Exists(filePath))
             {
                 Console.WriteLine("File does not exist.");
@@ -391,9 +220,9 @@ namespace ConsoleWord.Application.Services
             {
                 return extension switch
                 {
-                    ".docx" => LoadDocx(filePath),
-                    ".xml" => LoadXml(filePath),
-                    ".json" => LoadJson(filePath),
+                    ".docx" => _documentLoader.LoadDocx(filePath),
+                    ".xml" => _documentLoader.LoadXml(filePath),
+                    ".json" => _documentLoader.LoadJson(filePath),
                     _ => throw new InvalidOperationException("Unsupported file format")
                 };
             }
@@ -404,35 +233,8 @@ namespace ConsoleWord.Application.Services
             }
         }
 
-        private Document LoadDocx(string filePath)
-        {
-            using var wordDoc = WordprocessingDocument.Open(filePath, false);
-            var body = wordDoc.MainDocumentPart.Document.Body;
 
-            var text = new StringBuilder();
-            foreach (var paragraph in body.Elements<Paragraph>())
-            {
-                foreach (var run in paragraph.Elements<Run>())
-                {
-                    text.Append(run.InnerText);
-                }
-                text.AppendLine();
-            }
 
-            return new Document(Path.GetFileNameWithoutExtension(filePath), text.ToString(), "Arial", 12);
-        }
 
-        private Document LoadXml(string filePath)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(Document));
-            using var reader = new StreamReader(filePath);
-            return (Document)serializer.Deserialize(reader);
-        }
-
-        private Document LoadJson(string filePath)
-        {
-            string json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<Document>(json);
-        }
     }
 }

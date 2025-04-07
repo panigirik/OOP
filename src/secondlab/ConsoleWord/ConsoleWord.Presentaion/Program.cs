@@ -1,4 +1,5 @@
 ﻿using ConsoleWord;
+using ConsoleWord.Application.DocumentUseCases;
 using ConsoleWord.Application.Services;
 using ConsoleWord.Infrastracture;
 using ConsoleWord.Infrastracture.CloudStorage.Interfaces;
@@ -24,6 +25,11 @@ class Program
                 services.AddSingleton<StorageService>();
                 services.AddSingleton<AuthenticationService>();
                 services.AddSingleton<FormattingService>();
+                services.AddSingleton<DocumentEditor>();
+                services.AddSingleton<DocumentFactory>();
+                services.AddSingleton<DocumentLoader>();
+                services.AddSingleton<DocumentStorageService>();
+                services.AddSingleton<InputHelper>();
                 services.AddSingleton<DocumentService>();
                 services.AddSingleton<Menu>();
 

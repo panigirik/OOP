@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using ConsoleWord.Core.Entities;
+﻿using ConsoleWord.Core.Entities;
 using ConsoleWord.Core.Roles;
 
 namespace ConsoleWord.Application.Services
@@ -75,8 +72,7 @@ namespace ConsoleWord.Application.Services
             var newUser = new User(username, password, userRole);
             _users.Add(username, newUser);
 
-            // Добавляем нового пользователя в файл
-            File.AppendAllLines(UsersFilePath, new[] { $"{username}:{password}:{role}" });
+           File.AppendAllLines(UsersFilePath, new[] { $"{username}:{password}:{role}" });
             Console.WriteLine("User registered successfully!");
         }
 

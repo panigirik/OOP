@@ -6,8 +6,12 @@ using System.Xml.Serialization;
 using System.Text.Json;
 using System.IO;
 using System.Text;
+using ConsoleWord.Core.Entities;
 using ConsoleWord.Infrastracture.Formatting;
+using Spectre.Console;
 using Document = ConsoleWord.Core.Entities.Document;
+using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
+using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
 
 namespace ConsoleWord.Application.Services
 {
@@ -22,29 +26,28 @@ namespace ConsoleWord.Application.Services
 
         public void CreateAndSaveDocument()
         {
-            string documentName = GetUserInput("Enter document name: ");
-            string documentText = GetUserInput("Enter text: ");
-            string font = GetUserInput("Choose font (Arial, Times New Roman, Courier New): ");
-            int textSize = GetValidatedInteger("Choose text size (e.g., 12, 14, 16): ");
+            string documentName = AnsiConsole.Ask<string>("Enter document name: ");
+            string documentText = AnsiConsole.Ask<string>("Enter text: ");
+            string font = AnsiConsole.Ask<string>("Choose font (Arial, Times New Roman, Courier New): ");
+            int textSize = AnsiConsole.Ask<int>("Choose text size (e.g., 12, 14, 16): ");
 
-            bool isBold = AskYesNo("Make text bold? (y/n): ");
-            bool isItalic = AskYesNo("Make text italic? (y/n): ");
-            bool isUnderline = AskYesNo("Make text underlined? (y/n): ");
+            bool isBold = AnsiConsole.Confirm("Make text bold? (y/n)", false);
+            bool isItalic = AnsiConsole.Confirm("Make text italic? (y/n)", false);
+            bool isUnderline = AnsiConsole.Confirm("Make text underlined? (y/n)", false);
 
             var document = new Document(documentName, documentText, font, textSize);
             document.IsBold = isBold;
             document.IsItalic = isItalic;
             document.IsUnderline = isUnderline;
 
-
-            string format = GetUserInput("Choose format (docx/xml/json): ").ToLower();
-            string storageType = GetUserInput("Where do you want to save the document? (local/cloud): ").ToLower();
+            string format = AnsiConsole.Ask<string>("Choose format (docx/xml/json): ").ToLower();
+            string storageType = AnsiConsole.Ask<string>("Where do you want to save the document? (local/cloud): ").ToLower();
 
             string? savedPath = null;
 
             if (storageType == "local")
             {
-                string directory = GetValidDirectory("Enter save directory: ");
+                string directory = AnsiConsole.Ask<string>("Enter save directory: ");
                 savedPath = SaveDocumentLocally(document, directory, format);
             }
             else if (storageType == "cloud")
@@ -54,7 +57,7 @@ namespace ConsoleWord.Application.Services
             }
             else
             {
-                Console.WriteLine("Invalid storage type.");
+                AnsiConsole.MarkupLine("[red]Invalid storage type.[/]");
                 return;
             }
 
@@ -64,7 +67,7 @@ namespace ConsoleWord.Application.Services
                 formatter.ApplyTextDecorations(savedPath, isBold, isItalic, isUnderline);
             }
 
-            Console.WriteLine("Document created and saved.");
+            AnsiConsole.MarkupLine("[green]Document created and saved.[/]");
             Console.ReadLine();
         }
 
@@ -241,18 +244,85 @@ namespace ConsoleWord.Application.Services
             Console.WriteLine("Document uploaded to cloud (stub).");
         }
 
-        public void DisplayDocument(Document doc)
+
+
+
+        public string ReadDocxContent(string path)
         {
-            Console.WriteLine("\n--- Document Content ---");
-            Console.WriteLine(doc.Content.ToString());
-            Console.WriteLine("------------------------\n");
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(path, false))
+            {
+                var body = wordDoc.MainDocumentPart.Document.Body;
+                return body.InnerText;
+            }
         }
 
-        public void EditDocument(Document doc)
+        
+
+        
+        public void OpenAndEditDocument(User currentUser)
         {
+            string path = AnsiConsole.Ask<string>("Enter full file path to open:");
+
+            if (!File.Exists(path))
+            {
+                AnsiConsole.MarkupLine("[red]File not found.[/]");
+                return;
+            }
+
             while (true)
             {
-                Console.WriteLine("Choose an action: [1] Append Text [2] Delete Text [3] Show Content [4] Exit Edit");
+                AnsiConsole.Clear();
+                string content = ReadDocxContent(path);
+                AnsiConsole.MarkupLine("[bold]--- Document Content ---[/]");
+                AnsiConsole.WriteLine(content);
+                AnsiConsole.MarkupLine("[bold]------------------------[/]");
+
+                List<string> actions = new() { "Show Content", "Exit Edit" };
+
+                if (currentUser.Role.HasPermission("Edit"))
+                {
+                    actions.Insert(0, "Append Text");
+                    actions.Insert(1, "Delete All Text");
+                }
+
+                var choice = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Choose an action:")
+                        .AddChoices(actions)
+                );
+
+                switch (choice)
+                {
+                    case "Append Text":
+                        string toAppend = AnsiConsole.Ask<string>("Enter text to append:");
+                        AppendTextToDocx(path, toAppend);
+                        break;
+
+                    case "Delete All Text":
+                        ClearDocxContent(path);
+                        break;
+
+                    case "Show Content":
+                        break;
+
+                    case "Exit Edit":
+                        return;
+                }
+            }
+        }
+
+        
+        public void EditDocument(string path)
+        {
+            if (!File.Exists(path))
+            {
+                Console.WriteLine("File does not exist.");
+                return;
+            }
+
+            while (true)
+            {
+                Console.WriteLine("Choose an action: [1] Append Text [2] Delete All Text [3] Show Content [4] Exit Edit");
                 string choice = Console.ReadLine();
 
                 switch (choice)
@@ -260,17 +330,13 @@ namespace ConsoleWord.Application.Services
                     case "1":
                         Console.Write("Enter text to append: ");
                         string newText = Console.ReadLine();
-                        doc.Content.Append(newText);
+                        AppendTextToDocx(path, newText);
                         break;
                     case "2":
-                        Console.Write("Enter start index to delete: ");
-                        int start = int.Parse(Console.ReadLine());
-                        Console.Write("Enter length to delete: ");
-                        int length = int.Parse(Console.ReadLine());
-                        doc.DeleteText(start, length);
+                        ClearDocxContent(path);
                         break;
                     case "3":
-                        DisplayDocument(doc);
+                        Console.WriteLine(ReadDocxContent(path));
                         break;
                     case "4":
                         return;
@@ -281,23 +347,35 @@ namespace ConsoleWord.Application.Services
             }
         }
 
-        public void OpenAndEditDocument()
+        
+        public void AppendTextToDocx(string path, string textToAppend)
         {
-            Document doc = LoadDocument();
-            if (doc == null) return;
-
-            DisplayDocument(doc);
-            EditDocument(doc);
-
-            string save = GetUserInput("Do you want to save changes? (yes/no): ");
-            if (save.ToLower() == "yes")
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(path, true))
             {
-                string format = GetUserInput("Save format (docx/xml/json): ").ToLower();
-                string dir = GetValidDirectory("Enter save directory: ");
-                SaveDocumentLocally(doc, dir, format);
+                var body = wordDoc.MainDocumentPart.Document.Body;
+
+                Paragraph paragraph = new Paragraph();
+                Run run = new Run();
+                run.AppendChild(new Text(textToAppend));
+                paragraph.Append(run);
+
+                body.Append(paragraph);
+                wordDoc.MainDocumentPart.Document.Save();
             }
         }
 
+
+        public void ClearDocxContent(string path)
+        {
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(path, true))
+            {
+                var body = wordDoc.MainDocumentPart.Document.Body;
+                body.RemoveAllChildren();
+                wordDoc.MainDocumentPart.Document.Save();
+            }
+        }
+
+        
         public Document LoadDocument()
         {
             string filePath = GetUserInput("Enter full file path to open: ");

@@ -1,8 +1,8 @@
-﻿using System;
-using ConsoleWord.Application.Services;
+﻿using ConsoleWord.Application.Services;
 using ConsoleWord.Core.Entities;
 using ConsoleWord.Infrastracture.CloudStorage.Interfaces;
 using ConsoleWord.Infrastracture.LocalStorage.Interfaces;
+using Spectre.Console;
 
 namespace ConsoleWord
 {
@@ -25,55 +25,60 @@ namespace ConsoleWord
 
         public void Show()
         {
-            // Запрашиваем аутентификацию перед показом меню
             ShowAuthenticationOptions();
 
             while (true)
             {
-                Console.Clear();
-                Console.WriteLine("==== Document Editor ====");
-                Console.WriteLine("Welcome, " + _currentUser.Username);
-                Console.WriteLine("1. Create new document");
-                Console.WriteLine("2. Open and edit document");
-                Console.WriteLine("3. Logout");
-                Console.WriteLine("4. Exit");
-                Console.Write("Choose option: ");
-                string choice = Console.ReadLine();
+                AnsiConsole.Clear();
+                AnsiConsole.Write(new FigletText("Doc Editor").Centered().Color(Color.Blue));
+                AnsiConsole.MarkupLine($"[bold green]Welcome, {_currentUser.Username} ({_currentUser.Role.RoleName})[/]");
+
+                var options = new List<string>();
+
+                // Only users with 'Edit' permission see this
+                if (_currentUser.Role.HasPermission("Edit"))
+                    options.Add("Create new document");
+
+                // 'Read' permission allows viewing or editing depending on role
+                if (_currentUser.Role.HasPermission("Read"))
+                    options.Add("Open document");
+
+                if (_currentUser.Role.HasPermission("Edit"))
+                    options.Add("Edit document");
+
+                options.Add("Logout");
+                options.Add("Exit");
+
+                var choice = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("[yellow]Choose an option:[/]")
+                        .PageSize(5)
+                        .AddChoices(options));
 
                 switch (choice)
                 {
-                    case "1":
-                        if (_currentUser.Role.HasPermission("Edit"))
-                        {
-                            _documentService.CreateAndSaveDocument();
-                        }
-                        else
-                        {
-                            Console.WriteLine("You don't have permission to create a document.");
-                        }
+                    case "Create new document":
+                        _documentService.CreateAndSaveDocument();
                         break;
-                    case "2":
-                        if (_currentUser.Role.HasPermission("Read"))
-                        {
-                            _documentService.OpenAndEditDocument();
-                        }
-                        else
-                        {
-                            Console.WriteLine("You don't have permission to edit documents.");
-                        }
+
+                    case "Open document":
+                        _documentService.OpenAndEditDocument(_currentUser);
                         break;
-                    case "3":
+
+                    case "Edit document":
+                        _documentService.OpenAndEditDocument(_currentUser);
+                        break;
+
+                    case "Logout":
                         Logout();
                         break;
-                    case "4":
+
+                    case "Exit":
                         return;
-                    default:
-                        Console.WriteLine("Invalid choice.");
-                        break;
                 }
 
-                Console.WriteLine("Press Enter to continue...");
-                Console.ReadLine();
+                AnsiConsole.MarkupLine("\n[gray]Press any key to return to menu...[/]");
+                Console.ReadKey(true);
             }
         }
 
@@ -82,78 +87,78 @@ namespace ConsoleWord
         {
             while (true)
             {
-                Console.WriteLine("Welcome to the Document Editor!");
-                Console.WriteLine("1. Login");
-                Console.WriteLine("2. Register");
-                Console.Write("Choose an option: ");
-                string choice = Console.ReadLine();
+                AnsiConsole.Clear();
+                AnsiConsole.Write(new FigletText("Welcome").Centered().Color(Color.Orange1));
 
-                if (choice == "1")
+                var choice = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("[yellow]Authentication Required[/]")
+                        .AddChoices("Login", "Register"));
+
+                if (choice == "Login")
                 {
                     AuthenticateUser();
                     break;
                 }
-                else if (choice == "2")
+                else if (choice == "Register")
                 {
                     RegisterUser();
                     break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid option, please try again.");
                 }
             }
         }
 
         private void AuthenticateUser()
         {
-            Console.WriteLine("Please log in to continue.");
+            AnsiConsole.MarkupLine("[bold]Please log in to continue.[/]");
 
             while (true)
             {
-                Console.Write("Username: ");
-                string username = Console.ReadLine();
-
-                Console.Write("Password: ");
-                string password = Console.ReadLine();
+                string username = AnsiConsole.Ask<string>("Enter [green]Username[/]:");
+                string password = AnsiConsole.Prompt(
+                    new TextPrompt<string>("Enter [green]Password[/]:")
+                        .PromptStyle("red")
+                        .Secret());
 
                 _currentUser = _authenticationService.Authenticate(username, password);
 
                 if (_currentUser != null)
                 {
-                    Console.WriteLine($"Welcome, {_currentUser.Username}! You are logged in as {_currentUser.Role.RoleName}.");
+                    AnsiConsole.MarkupLine($"[green]Welcome, {_currentUser.Username}![/] Logged in as [blue]{_currentUser.Role.RoleName}[/].");
                     break;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid credentials. Please try again.");
+                    AnsiConsole.MarkupLine("[red]Invalid credentials. Try again.[/]");
                 }
             }
         }
 
         private void RegisterUser()
         {
-            Console.WriteLine("Please register to create a new account.");
+            AnsiConsole.MarkupLine("[bold]Please register to create a new account.[/]");
 
-            Console.Write("Username: ");
-            string username = Console.ReadLine();
+            string username = AnsiConsole.Ask<string>("Enter [green]Username[/]:");
+            string password = AnsiConsole.Prompt(
+                new TextPrompt<string>("Enter [green]Password[/]:")
+                    .PromptStyle("red")
+                    .Secret());
 
-            Console.Write("Password: ");
-            string password = Console.ReadLine();
-
-            Console.Write("Role (Admin/Editor/Viewer): ");
-            string role = Console.ReadLine();
+            string role = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Choose your [green]role[/]:")
+                    .AddChoices("Admin", "Editor", "Viewer"));
 
             _authenticationService.Register(username, password, role);
 
-            // После регистрации выполняем аутентификацию
+            AnsiConsole.MarkupLine("[green]Registration successful![/]");
             AuthenticateUser();
         }
 
         private void Logout()
         {
             _currentUser = null;
-            Console.WriteLine("You have been logged out.");
+            AnsiConsole.MarkupLine("[gray]You have been logged out.[/]");
             ShowAuthenticationOptions();
         }
     }

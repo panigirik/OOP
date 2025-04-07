@@ -13,4 +13,8 @@
     <SourceRoot Include="C:\Users\Admin\AppData\Roaming\NuGet\V\" />
     <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
   </ItemGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgAWSSDK_Core Condition=" '$(PkgAWSSDK_Core)' == '' ">C:\Users\Admin\AppData\Roaming\NuGet\V\awssdk.core\3.7.402.20</PkgAWSSDK_Core>
+    <PkgAWSSDK_S3 Condition=" '$(PkgAWSSDK_S3)' == '' ">C:\Users\Admin\AppData\Roaming\NuGet\V\awssdk.s3\3.7.415.19</PkgAWSSDK_S3>
+  </PropertyGroup>
 </Project>

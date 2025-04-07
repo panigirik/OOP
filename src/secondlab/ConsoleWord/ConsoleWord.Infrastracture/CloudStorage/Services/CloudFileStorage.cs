@@ -2,20 +2,39 @@
 using ConsoleWord.Core.Entities;
 using ConsoleWord.Infrastracture.CloudStorage.Interfaces;
 
-namespace ConsoleWord.Infrastracture.CloudStorage.Services;
-
-public class CloudFileStorage : ICloudStorageProvider
+namespace ConsoleWord.Infrastracture.CloudStorage.Services
 {
-    public void Upload(Document doc, string cloudPath)
+    public class CloudFileStorage : ICloudStorageProvider
     {
-        Console.WriteLine($"Uploading document '{doc.Name}' to {cloudPath}...");
-        // Здесь может быть логика загрузки в облачное хранилище
-    }
+        // Метод для загрузки документа в облако
+        public void UploadDocument(Document doc, string cloudPath)
+        {
+            Console.WriteLine($"Uploading document '{doc.Name}' to {cloudPath}...");
+            // Загрузка в облачное хранилище
+            Upload(doc, cloudPath); // Используем вашу реализацию загрузки
+        }
 
-    public Document Download(string cloudPath)
-    {
-        Console.WriteLine($"Downloading document from {cloudPath}...");
-        // Здесь заглушка, в реальности загрузка данных
-        return new PlainTextDocument("CloudDocument") { Content = new StringBuilder("Sample cloud content") };
+        // Метод для скачивания документа из облака
+        public Document DownloadDocument(string cloudPath)
+        {
+            Console.WriteLine($"Downloading document from {cloudPath}...");
+            // Скачиваем документ из облачного хранилища
+            return Download(cloudPath); // Используем вашу реализацию загрузки
+        }
+
+        // Приватные методы для работы с облаком
+        public void Upload(Document doc, string cloudPath)
+        {
+            // Здесь логика загрузки в облачное хранилище
+            Console.WriteLine($"Document '{doc.Name}' uploaded to {cloudPath}.");
+        }
+
+        public Document Download(string cloudPath)
+        {
+            // Здесь логика загрузки из облака
+            Console.WriteLine($"Document downloaded from {cloudPath}.");
+            // Пример документа
+            return new PlainTextDocument("CloudDocument") { Content = new StringBuilder("Sample cloud content") };
+        }
     }
 }

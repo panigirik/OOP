@@ -19,4 +19,9 @@ public static class DependencyFactory
     public static StorageService GetStorageService() => _storageService;
     public static FormattingService GetFormattingService() => _formattingService;
     public static Menu GetMenu() => _menu;
+
+    public static void Initialize(StorageService storageService, FormattingService formattingService, DocumentService documentService)
+    {
+        throw new NotImplementedException();
+    }
 }

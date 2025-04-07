@@ -9,10 +9,14 @@ namespace ConsoleWord.Core.Entities
 {
     public class Document
     {
-        public string Name { get; }
-        public StringBuilder Content { get; set; } // Changed to StringBuilder for better manipulation
-        public string Font { get; }
-        public int TextSize { get; }
+        public string Name { get; set; }
+        public StringBuilder Content { get; set; }
+        public string Font { get; set; }
+        public int TextSize { get; set; }
+        public bool IsBold { get; set; }
+        public bool IsItalic { get; set; }
+        public bool IsUnderline { get; set; }
+
 
         // Private field to hold the WordprocessingDocument
         private WordprocessingDocument wordDoc;
@@ -25,6 +29,8 @@ namespace ConsoleWord.Core.Entities
             TextSize = textSize;
         }
 
+        public Document() { }
+        
         public void InsertText(Run run)
         {
             // Add text to the document (assuming you handle the actual Open XML insertion)

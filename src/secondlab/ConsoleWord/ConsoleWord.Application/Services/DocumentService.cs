@@ -1,7 +1,12 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using ConsoleWord.Infrastracture;
-using ConsoleWord.Core.Decorators; // Include decorators for text styling
+using ConsoleWord.Core.Decorators;
+using System.Xml.Serialization;
+using System.Text.Json;
+using System.IO;
+using System.Text;
+using ConsoleWord.Infrastracture.Formatting;
 using Document = ConsoleWord.Core.Entities.Document;
 
 namespace ConsoleWord.Application.Services
@@ -17,132 +22,339 @@ namespace ConsoleWord.Application.Services
 
         public void CreateAndSaveDocument()
         {
-            Console.Write("Enter document name: ");
-            string documentName = Console.ReadLine()?.Trim();
-            while (string.IsNullOrWhiteSpace(documentName))
-            {
-                Console.WriteLine("Invalid document name. Please enter a valid name.");
-                documentName = Console.ReadLine()?.Trim();
-            }
+            string documentName = GetUserInput("Enter document name: ");
+            string documentText = GetUserInput("Enter text: ");
+            string font = GetUserInput("Choose font (Arial, Times New Roman, Courier New): ");
+            int textSize = GetValidatedInteger("Choose text size (e.g., 12, 14, 16): ");
 
-            Console.Write("Enter text: ");
-            string documentText = Console.ReadLine()?.Trim();
+            bool isBold = AskYesNo("Make text bold? (y/n): ");
+            bool isItalic = AskYesNo("Make text italic? (y/n): ");
+            bool isUnderline = AskYesNo("Make text underlined? (y/n): ");
 
-            Console.Write("Choose font (Arial, Times New Roman, Courier New): ");
-            string font = Console.ReadLine()?.Trim();
+            var document = new Document(documentName, documentText, font, textSize);
+            document.IsBold = isBold;
+            document.IsItalic = isItalic;
+            document.IsUnderline = isUnderline;
 
-            Console.Write("Choose text size (e.g., 12, 14, 16): ");
-            int textSize;
-            while (!int.TryParse(Console.ReadLine(), out textSize) || textSize <= 0)
-            {
-                Console.WriteLine("Invalid text size. Please enter a valid size (e.g., 12, 14, 16): ");
-            }
 
-            // Create the Document instance
-            Document document = new Document(documentName, documentText, font, textSize);
+            string format = GetUserInput("Choose format (docx/xml/json): ").ToLower();
+            string storageType = GetUserInput("Where do you want to save the document? (local/cloud): ").ToLower();
 
-            // Choose text decorations one by one
-            Console.WriteLine("Do you want the text to be bold? (1 - Yes, 2 - No): ");
-            string boldChoice = Console.ReadLine()?.Trim();
-            if (boldChoice == "1")
-            {
-                document = new BoldDecorator(document);
-            }
-
-            Console.WriteLine("Do you want the text to be italic? (1 - Yes, 2 - No): ");
-            string italicChoice = Console.ReadLine()?.Trim();
-            if (italicChoice == "1")
-            {
-                document = new ItalicDecorator(document);
-            }
-
-            Console.WriteLine("Do you want the text to be underlined? (1 - Yes, 2 - No): ");
-            string underlineChoice = Console.ReadLine()?.Trim();
-            if (underlineChoice == "1")
-            {
-                document = new UnderlineDecorator(document);
-            }
-
-            Console.Write("Where do you want to save the document? (local/cloud): ");
-            string storageType = Console.ReadLine()?.Trim().ToLower();
+            string? savedPath = null;
 
             if (storageType == "local")
             {
-                Console.Write("Enter save directory: ");
-                string directory = Console.ReadLine()?.Trim();
-                while (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory))
-                {
-                    Console.WriteLine("Invalid directory path. Please enter a valid directory.");
-                    directory = Console.ReadLine()?.Trim();
-                }
-                SaveDocumentLocally(document, directory);
+                string directory = GetValidDirectory("Enter save directory: ");
+                savedPath = SaveDocumentLocally(document, directory, format);
             }
             else if (storageType == "cloud")
             {
-                SaveDocumentToCloud(document);
+                SaveDocumentToCloud(document, format);
+                return;
             }
             else
             {
                 Console.WriteLine("Invalid storage type.");
+                return;
             }
+
+            if (format == "docx" && savedPath != null)
+            {
+                var formatter = new OpenXmlFormatter();
+                formatter.ApplyTextDecorations(savedPath, isBold, isItalic, isUnderline);
+            }
+
+            Console.WriteLine("Document created and saved.");
+            Console.ReadLine();
         }
 
-        public void SaveDocumentLocally(Document document, string directory)
+        public string GetUserInput(string prompt)
         {
+            Console.Write(prompt);
+            string input = Console.ReadLine()?.Trim();
+            while (string.IsNullOrWhiteSpace(input))
+            {
+                Console.WriteLine("Invalid input. Please try again.");
+                Console.Write(prompt);
+                input = Console.ReadLine()?.Trim();
+            }
+            return input;
+        }
+
+        public bool AskYesNo(string prompt)
+        {
+            Console.Write(prompt);
+            string input = Console.ReadLine()?.Trim().ToLower();
+
+            while (input != "y" && input != "n")
+            {
+                Console.WriteLine("Invalid input. Please enter 'y' or 'n'.");
+                Console.Write(prompt);
+                input = Console.ReadLine()?.Trim().ToLower();
+            }
+
+            return input == "y";
+        }
+
+        private int GetValidatedInteger(string prompt)
+        {
+            int value;
+            Console.Write(prompt);
+            while (!int.TryParse(Console.ReadLine(), out value) || value <= 0)
+            {
+                Console.WriteLine("Invalid number. Please enter a positive integer.");
+                Console.Write(prompt);
+            }
+            return value;
+        }
+
+        public string GetValidDirectory(string prompt)
+        {
+            Console.Write(prompt);
+            string directory = Console.ReadLine()?.Trim();
+            while (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory))
+            {
+                Console.WriteLine("Invalid directory. Please enter a valid path.");
+                Console.Write(prompt);
+                directory = Console.ReadLine()?.Trim();
+            }
+            return directory;
+        }
+        
+        private Document LoadMarkdown(string filePath)
+        {
+            var lines = File.ReadAllLines(filePath);
+            if (lines.Length == 0)
+                throw new InvalidOperationException("Empty markdown file");
+
+            string name = Path.GetFileNameWithoutExtension(filePath);
+            var content = new StringBuilder();
+
+            for (int i = 1; i < lines.Length; i++) // пропускаем заголовок
+            {
+                content.AppendLine(lines[i]);
+            }
+
+            return new Document(name, content.ToString(), "Arial", 12);
+        }
+
+        
+        private void SaveAsMarkdown(Document document, string filePath)
+        {
+            var sb = new StringBuilder();
+
+            // Пример простой разметки markdown: жирный, курсив, подчеркивание
+            sb.AppendLine($"# {document.Name}");
+            sb.AppendLine();
+
+            // Можно применить базовые markdown-стили (как опцию — расширяемо)
+            string content = document.Content.ToString();
+
+            // Обработка базовых стилей (например, жирный шрифт как **text**)
+            if (document.IsBold) content = $"**{content}**";
+            if (document.IsItalic) content = $"*{content}*";
+            if (document.IsUnderline) content = $"<u>{content}</u>"; // Markdown не поддерживает underline напрямую
+
+            sb.AppendLine(content);
+
+            File.WriteAllText(filePath, sb.ToString());
+        }
+
+
+        public string SaveDocumentLocally(Document document, string directory, string format)
+        {
+            string filePath = Path.Combine(directory, document.Name + $".{format}");
             try
             {
-                string filePath = Path.Combine(directory, document.Name + ".docx");
-
-                // Create a new Word document using Open XML SDK
-                using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
+                switch (format)
                 {
-                    // Add the main part of the document
-                    MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
-                    mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new Body());
-
-                    // Add the content to the document
-                    Body body = mainPart.Document.Body;
-                    Paragraph paragraph = new Paragraph();
-                    Run run = new Run(new Text(document.Content.ToString())); // Use ToString for StringBuilder
-                    paragraph.Append(run);
-                    body.Append(paragraph);
-
-                    // Font size and settings
-                    RunProperties runProperties = new RunProperties();
-                    runProperties.Append(new FontSize() { Val = (document.TextSize * 2).ToString() }); // Multiply by 2 for Open XML's half-size units
-                    runProperties.Append(new RunFonts() { Ascii = document.Font }); // Set font
-                    run.PrependChild(runProperties);
-
-                    // Apply any text decorations (bold, italic, underline)
-                    if (document is BoldDecorator)
-                    {
-                        run.PrependChild(new Bold());
-                    }
-                    if (document is ItalicDecorator)
-                    {
-                        run.PrependChild(new Italic());
-                    }
-                    if (document is UnderlineDecorator)
-                    {
-                        run.PrependChild(new Underline());
-                    }
-
-                    // Save the document
-                    wordDocument.Save();
+                    case "docx":
+                        SaveAsDocx(document, filePath);
+                        break;
+                    case "xml":
+                        SaveAsXml(document, filePath);
+                        break;
+                    case "json":
+                        SaveAsJson(document, filePath);
+                        break;
+                    case "md":
+                        SaveAsMarkdown(document, filePath);
+                        break;
+                    default:
+                        Console.WriteLine("Invalid format selected.");
+                        return null;
                 }
-
                 Console.WriteLine($"Document saved successfully: {filePath}");
+                return filePath;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error saving document: {ex.Message}");
+                return null;
             }
         }
 
-        public void SaveDocumentToCloud(Document document)
+
+        private void SaveAsDocx(Document document, string filePath)
         {
-            _storageService.UploadToCloud(document, "cloud-storage-placeholder");
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
+            {
+                MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+                mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new Body());
+                Body body = mainPart.Document.Body;
+
+                Paragraph paragraph = new Paragraph();
+                Run run = new Run(new Text(document.Content.ToString()));
+                RunProperties runProperties = new RunProperties
+                {
+                    FontSize = new FontSize() { Val = (document.TextSize * 2).ToString() },
+                    RunFonts = new RunFonts() { Ascii = document.Font }
+                };
+                run.PrependChild(runProperties);
+
+                // These will be overridden later with ApplyTextDecorations
+                paragraph.Append(run);
+                body.Append(paragraph);
+            }
+        }
+
+        private void SaveAsXml(Document document, string filePath)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Document));
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                serializer.Serialize(writer, document);
+            }
+
+            Console.WriteLine($"Document saved as XML successfully: {filePath}");
+        }
+
+        private void SaveAsJson(Document document, string filePath)
+        {
+            string json = JsonSerializer.Serialize(document, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(filePath, json);
+        }
+
+        public void SaveDocumentToCloud(Document document, string format)
+        {
+            _storageService.UploadToCloud(document, format);
             Console.WriteLine("Document uploaded to cloud (stub).");
+        }
+
+        public void DisplayDocument(Document doc)
+        {
+            Console.WriteLine("\n--- Document Content ---");
+            Console.WriteLine(doc.Content.ToString());
+            Console.WriteLine("------------------------\n");
+        }
+
+        public void EditDocument(Document doc)
+        {
+            while (true)
+            {
+                Console.WriteLine("Choose an action: [1] Append Text [2] Delete Text [3] Show Content [4] Exit Edit");
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        Console.Write("Enter text to append: ");
+                        string newText = Console.ReadLine();
+                        doc.Content.Append(newText);
+                        break;
+                    case "2":
+                        Console.Write("Enter start index to delete: ");
+                        int start = int.Parse(Console.ReadLine());
+                        Console.Write("Enter length to delete: ");
+                        int length = int.Parse(Console.ReadLine());
+                        doc.DeleteText(start, length);
+                        break;
+                    case "3":
+                        DisplayDocument(doc);
+                        break;
+                    case "4":
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
+            }
+        }
+
+        public void OpenAndEditDocument()
+        {
+            Document doc = LoadDocument();
+            if (doc == null) return;
+
+            DisplayDocument(doc);
+            EditDocument(doc);
+
+            string save = GetUserInput("Do you want to save changes? (yes/no): ");
+            if (save.ToLower() == "yes")
+            {
+                string format = GetUserInput("Save format (docx/xml/json): ").ToLower();
+                string dir = GetValidDirectory("Enter save directory: ");
+                SaveDocumentLocally(doc, dir, format);
+            }
+        }
+
+        public Document LoadDocument()
+        {
+            string filePath = GetUserInput("Enter full file path to open: ");
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("File does not exist.");
+                return null;
+            }
+
+            string extension = Path.GetExtension(filePath).ToLower();
+
+            try
+            {
+                return extension switch
+                {
+                    ".docx" => LoadDocx(filePath),
+                    ".xml" => LoadXml(filePath),
+                    ".json" => LoadJson(filePath),
+                    _ => throw new InvalidOperationException("Unsupported file format")
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load document: {ex.Message}");
+                return null;
+            }
+        }
+
+        private Document LoadDocx(string filePath)
+        {
+            using var wordDoc = WordprocessingDocument.Open(filePath, false);
+            var body = wordDoc.MainDocumentPart.Document.Body;
+
+            var text = new StringBuilder();
+            foreach (var paragraph in body.Elements<Paragraph>())
+            {
+                foreach (var run in paragraph.Elements<Run>())
+                {
+                    text.Append(run.InnerText);
+                }
+                text.AppendLine();
+            }
+
+            return new Document(Path.GetFileNameWithoutExtension(filePath), text.ToString(), "Arial", 12);
+        }
+
+        private Document LoadXml(string filePath)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Document));
+            using var reader = new StreamReader(filePath);
+            return (Document)serializer.Deserialize(reader);
+        }
+
+        private Document LoadJson(string filePath)
+        {
+            string json = File.ReadAllText(filePath);
+            return JsonSerializer.Deserialize<Document>(json);
         }
     }
 }

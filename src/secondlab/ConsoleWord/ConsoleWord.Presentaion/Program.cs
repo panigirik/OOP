@@ -4,7 +4,6 @@ using ConsoleWord.Application.DocumentUseCases;
 using ConsoleWord.Application.Dropbox;
 using ConsoleWord.Application.Services;
 using ConsoleWord.Infrastracture;
-using ConsoleWord.Infrastracture.CloudStorage.Interfaces;
 using ConsoleWord.Infrastracture.CloudStorage.Services;
 using ConsoleWord.Infrastracture.LocalStorage.Interfaces;
 using Hangfire;
@@ -32,7 +31,12 @@ class Program
                 // Регистрация хранилища: регистрируем IStorageProvider и ICloudStorageProvider
                 services.AddSingleton<IStorageProvider, LocalFileStorageProvider>();
                 // Вместо CloudFileStorage, регистрируем DropboxStorageProvider, который реализует ICloudStorageProvider из Dropbox
-                services.AddSingleton<ICloudDropBoxStorageProvider>(provider => new DropboxStorageProvider(dropboxToken));
+                services.AddSingleton<ICloudDropBoxStorageProvider>(provider => 
+                {
+                    // Create a DropboxClient using the token
+                    //var dropboxClient = new DropboxClient(dropboxToken);
+                    return new DropboxStorageProvider(); // Pass the DropboxClient instance to DropboxStorageProvider
+                });
 
                 // Регистрация других сервисов приложения
                 services.AddSingleton<StorageService>();

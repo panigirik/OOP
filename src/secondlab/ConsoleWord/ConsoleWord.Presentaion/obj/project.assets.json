@@ -2451,6 +2451,7 @@
     "net8.0": [
       "ConsoleWord.Application >= 1.0.0",
       "ConsoleWord.Infrastracture >= 1.0.0",
+      "Dropbox.Api >= 7.0.0",
       "Hangfire >= 1.8.18",
       "Hangfire.MemoryStorage >= 1.8.1.1",
       "Microsoft.Extensions.DependencyInjection >= 8.0.0",
@@ -2510,6 +2511,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "Dropbox.Api": {
+            "target": "Package",
+            "version": "[7.0.0, )"
+          },
           "Hangfire": {
             "target": "Package",
             "version": "[1.8.18, )"

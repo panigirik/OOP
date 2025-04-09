@@ -3,6 +3,7 @@ using ConsoleWord.Application.Dropbox;
 using ConsoleWord.Core.Entities;
 using ConsoleWord.Infrastracture.CloudStorage.Interfaces;
 using ConsoleWord.Infrastracture.LocalStorage.Interfaces;
+using Spectre.Console;
 
 
 namespace ConsoleWord.Infrastracture;
@@ -54,10 +55,16 @@ public class StorageService
                 case "md":
                     DocumentFactory.SaveAsMarkdown(document, stream); break;
                 default:
-                    Console.WriteLine("Unsupported format");
+                    AnsiConsole.WriteLine("Unsupported format");
                     return;
             }
 
+            if (stream.Length == 0)
+            {
+                AnsiConsole.WriteLine("[red]Error: The document was not saved correctly to the stream.[/]");
+                return;
+            }
+            
             fileContent = stream.ToArray();
         }
 

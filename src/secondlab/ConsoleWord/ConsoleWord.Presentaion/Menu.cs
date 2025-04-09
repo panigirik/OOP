@@ -313,7 +313,7 @@ namespace ConsoleWord
 
             foreach (var subscriber in subscribers)
             {
-                _notificationService.SendNotification(subscriber, message);
+                _notificationService.Send(subscriber, message);
             }
         }
         

@@ -4,7 +4,10 @@ using System.Xml.Serialization;
 using ConsoleWord.Infrastracture;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Spectre.Console;
 using Document = ConsoleWord.Core.Entities.Document;
+using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
+using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
 
 namespace ConsoleWord.Application.DocumentUseCases;
 
@@ -125,23 +128,32 @@ public class DocumentFactory
 
     public static void SaveAsDocx(Document document, Stream outputStream)
     {
-        using var wordDocument = WordprocessingDocument.Create(outputStream, DocumentFormat.OpenXml.WordprocessingDocumentType.Document, true);
-        MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
-        mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new Body());
-        Body body = mainPart.Document.Body;
-
-        Paragraph paragraph = new Paragraph();
-        Run run = new Run(new Text(document.Content.ToString()));
-        RunProperties runProperties = new RunProperties
+        try
         {
-            FontSize = new FontSize() { Val = (document.TextSize * 2).ToString() },
-            RunFonts = new RunFonts() { Ascii = document.Font }
-        };
-        run.PrependChild(runProperties);
+            using var wordDocument = WordprocessingDocument.Create(outputStream, DocumentFormat.OpenXml.WordprocessingDocumentType.Document, true);
+            MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+            mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new Body());
+            Body body = mainPart.Document.Body;
 
-        paragraph.Append(run);
-        body.Append(paragraph);
+            Paragraph paragraph = new Paragraph();
+            Run run = new Run(new Text(document.Content.ToString()));
+            RunProperties runProperties = new RunProperties
+            {
+                FontSize = new FontSize() { Val = (document.TextSize * 2).ToString() },
+                RunFonts = new RunFonts() { Ascii = document.Font }
+            };
+            run.PrependChild(runProperties);
+
+            paragraph.Append(run);
+            body.Append(paragraph);
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.WriteLine($"Error while saving document as docx: {ex.Message}");
+            throw;
+        }
     }
+
 
     
     public void SaveAsDocx(Document document, string filePath)

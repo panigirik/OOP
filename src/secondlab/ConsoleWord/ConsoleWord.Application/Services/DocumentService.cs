@@ -89,7 +89,6 @@ namespace ConsoleWord.Application.Services
                 _documentStorageService.SaveDocumentToCloud(document, format);
             }
 
-            AnsiConsole.MarkupLine("[green]Document created and saved.[/]");
             Console.ReadLine();
         }
 

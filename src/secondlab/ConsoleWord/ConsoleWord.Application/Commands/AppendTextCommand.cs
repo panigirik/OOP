@@ -1,29 +1,45 @@
 ﻿using ConsoleWord.Application.DocumentUseCases;
 using ConsoleWord.Application.Interfaces;
 
-namespace ConsoleWord.Application.Commands;
-
-public class AppendTextCommand : IDocumentCommand
+namespace ConsoleWord.Application.Commands
 {
-    private readonly string _path;
-    private readonly string _text;
-    private readonly DocumentEditor _editor;
-
-    public AppendTextCommand(string path, string text, DocumentEditor editor)
+    public class AppendTextCommand : IDocumentCommand
     {
-        _path = path;
-        _text = text;
-        _editor = editor;
-    }
+        private readonly string _path;
+        private readonly string _textToAppend;
+        private readonly DocumentEditor _editor;
+        private readonly bool _isTextFile;
+        private string? _previousContent;
 
-    public void Execute()
-    {
-        _editor.AppendTextToDocx(_path, _text);
-    }
+        public AppendTextCommand(string path, string textToAppend, DocumentEditor editor, bool isTextFile = false)
+        {
+            _path = path;
+            _textToAppend = textToAppend;
+            _editor = editor;
+            _isTextFile = isTextFile;
+        }
 
-    public void Undo()
-    {
-        _editor.RemoveLastAppendedText(_path, _text.Length);
+        public void Execute()
+        {
+            _previousContent = _isTextFile
+                ? _editor.ReadTextFileContent(_path)
+                : _editor.ReadDocxContent(_path);
+
+            if (_isTextFile)
+                _editor.AppendTextToTextFile(_path, _textToAppend);
+            else
+                _editor.AppendTextToDocx(_path, _textToAppend);
+        }
+
+        public void Undo()
+        {
+            if (_previousContent is not null)
+            {
+                if (_isTextFile)
+                    _editor.OverwriteTextFile(_path, _previousContent);
+                else
+                    _editor.OverwriteDocxFile(_path, _previousContent);
+            }
+        }
     }
 }
-

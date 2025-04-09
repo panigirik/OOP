@@ -94,5 +94,43 @@ public class DocumentEditor
         }
     }
 
+    public void OverwriteTextFile(string path, string newText)
+    {
+        File.WriteAllText(path, newText);
+    }
+
+    public void OverwriteDocxFile(string path, string newText)
+    {
+        using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(path, true))
+        {
+            var body = wordDoc.MainDocumentPart.Document.Body;
+            body.RemoveAllChildren(); // удаляем всё старое
+
+            Paragraph paragraph = new Paragraph();
+            Run run = new Run();
+            run.AppendChild(new Text(newText));
+            paragraph.Append(run);
+
+            body.Append(paragraph);
+            wordDoc.MainDocumentPart.Document.Save();
+        }
+    }
+
+    
+    public string ReadTextFileContent(string path)
+    {
+        return File.ReadAllText(path);
+    }
+    
+    public void AppendTextToTextFile(string path, string textToAppend)
+    {
+        File.AppendAllText(path, textToAppend + Environment.NewLine);
+    }
+
+    
+    public void ClearTextFileContent(string path)
+    {
+        File.WriteAllText(path, string.Empty);
+    }
     
 }

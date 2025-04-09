@@ -121,10 +121,29 @@ namespace ConsoleWord.Application.Services
                 return;
             }
 
+            string extension = Path.GetExtension(path).ToLower();
+
+            if (extension != ".docx" && extension != ".txt" && extension != ".json" && extension != ".xml" && extension != ".md")
+            {
+                AnsiConsole.MarkupLine("[red]Unsupported file format. Supported formats: .docx, .txt, .json, .xml, .md[/]");
+                return;
+            }
+
             while (true)
             {
                 AnsiConsole.Clear();
-                string content = _documentEditor.ReadDocxContent(path);
+                string content;
+
+                try
+                {
+                    content = extension == ".docx" ? _documentEditor.ReadDocxContent(path) : _documentEditor.ReadTextFileContent(path);
+                }
+                catch (Exception ex)
+                {
+                    AnsiConsole.MarkupLine($"[red]Failed to open document: {ex.Message}[/]");
+                    return;
+                }
+
                 AnsiConsole.MarkupLine("[bold]--- Document Content ---[/]");
                 AnsiConsole.WriteLine(content);
                 AnsiConsole.MarkupLine("[bold]------------------------[/]");
@@ -145,14 +164,165 @@ namespace ConsoleWord.Application.Services
 
                 switch (choice)
                 {
+                     
+                    ////////////////////
                     case "Append Text":
-                        string toAppend = AnsiConsole.Ask<string>("Enter text to append:");
-                        var appendCmd = new AppendTextCommand(path, toAppend, _documentEditor);
-                        _undoRedoService.ExecuteCommand(appendCmd);
-                        break;
+                {
+                    string originalContent = extension == ".docx"
+                        ? _documentEditor.ReadDocxContent(path)
+                        : _documentEditor.ReadTextFileContent(path);
+
+                    List<string> contentLines = originalContent.Split('\n').ToList();
+                    if (contentLines.Count == 0) contentLines.Add("");
+
+                    int cursorLine = 0;
+                    int cursorCol = 0;
+                    string currentColor = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title("Choose a text color:")
+                            .AddChoices("red", "green", "yellow", "blue", "white")
+                    );
+
+                    bool editing = true;
+                    string inputSequence = string.Empty; // Для хранения введенной последовательности
+
+                    while (editing)
+                    {
+                        AnsiConsole.Clear();
+                        AnsiConsole.MarkupLine($"[bold]--- Interactive Text Editor (ESC = Save, Arrows = Move, Typing = Insert) ---[/]");
+                        AnsiConsole.MarkupLine($"Current color: [{currentColor}]{currentColor}[/] at [bold]Line:[/] {cursorLine + 1}, [bold]Col:[/] {cursorCol + 1}");
+                        AnsiConsole.WriteLine();
+
+                        for (int i = 0; i < contentLines.Count; i++)
+                        {
+                            string line = contentLines[i];
+                            if (i == cursorLine)
+                            {
+                                if (cursorCol >= line.Length)
+                                    line = line.PadRight(cursorCol + 1);
+
+                                string before = line[..cursorCol];
+                                string cursorChar = line[cursorCol].ToString();
+                                string after = cursorCol + 1 < line.Length ? line[(cursorCol + 1)..] : "";
+
+                                AnsiConsole.Markup($"[{currentColor}]{before}[/]");
+                                AnsiConsole.Markup($"[{currentColor}][invert]{cursorChar}[/][/]");
+                                AnsiConsole.MarkupLine($"[{currentColor}]{after}[/]");
+                            }
+                            else
+                            {
+                                AnsiConsole.MarkupLine($"[{currentColor}]{line}[/]");
+                            }
+                        }
+
+                        var key = Console.ReadKey(true);
+
+                        // Добавляем текущий символ в последовательность ввода
+                        if (!char.IsControl(key.KeyChar))
+                        {
+                            inputSequence += key.KeyChar.ToString();
+
+                            // Проверяем, не введена ли комбинация "111"
+                            if (inputSequence.EndsWith("111"))
+                            {
+                                editing = false; // Выход из режима редактирования
+                                break;
+                            }
+                        }
+
+                        switch (key.Key)
+                        {
+                            case ConsoleKey.UpArrow:
+                                if (cursorLine > 0) cursorLine--;
+                                cursorCol = Math.Min(cursorCol, contentLines[cursorLine].Length);
+                                break;
+
+                            case ConsoleKey.DownArrow:
+                                if (cursorLine < contentLines.Count - 1) cursorLine++;
+                                cursorCol = Math.Min(cursorCol, contentLines[cursorLine].Length);
+                                break;
+
+                            case ConsoleKey.LeftArrow:
+                                if (cursorCol > 0)
+                                    cursorCol--;
+                                else if (cursorLine > 0)
+                                {
+                                    cursorLine--;
+                                    cursorCol = contentLines[cursorLine].Length;
+                                }
+                                break;
+
+                            case ConsoleKey.RightArrow:
+                                if (cursorCol < contentLines[cursorLine].Length)
+                                    cursorCol++;
+                                else if (cursorLine < contentLines.Count - 1)
+                                {
+                                    cursorLine++;
+                                    cursorCol = 0;
+                                }
+                                break;
+
+                            case ConsoleKey.Backspace:
+                                if (cursorCol > 0)
+                                {
+                                    var line = contentLines[cursorLine];
+                                    contentLines[cursorLine] = line.Remove(cursorCol - 1, 1);
+                                    cursorCol--;
+                                }
+                                else if (cursorLine > 0)
+                                {
+                                    cursorCol = contentLines[cursorLine - 1].Length;
+                                    contentLines[cursorLine - 1] += contentLines[cursorLine];
+                                    contentLines.RemoveAt(cursorLine);
+                                    cursorLine--;
+                                }
+                                break;
+
+                            case ConsoleKey.Enter:
+                                string currentLine = contentLines[cursorLine];
+                                string newLine = currentLine[cursorCol..];
+                                contentLines[cursorLine] = currentLine[..cursorCol];
+                                contentLines.Insert(cursorLine + 1, newLine);
+                                cursorLine++;
+                                cursorCol = 0;
+                                break;
+
+                            case ConsoleKey.Escape:
+                                editing = false;
+                                break;
+
+                            default:
+                                if (!char.IsControl(key.KeyChar))
+                                {
+                                    var line = contentLines[cursorLine];
+                                    line = line.Insert(cursorCol, key.KeyChar.ToString());
+                                    contentLines[cursorLine] = line;
+                                    cursorCol++;
+                                }
+                                break;
+                        }
+                    }
+
+                    // Применим цвет ко всему тексту
+                    string finalText = string.Join("\n", contentLines);
+                    string coloredText = $"[{currentColor}]{finalText}[/]";
+
+                    var appendCmd = extension == ".docx"
+                        ? new AppendTextCommand(path, coloredText, _documentEditor)
+                        : new AppendTextCommand(path, coloredText, _documentEditor, isTextFile: true);
+
+                    _undoRedoService.ExecuteCommand(appendCmd);
+                    break;
+                }
+
+                    
+                    //
+
 
                     case "Delete All Text":
-                        var clearCmd = new ClearTextCommand(path, _documentEditor);
+                        var clearCmd = extension == ".docx"
+                            ? new ClearTextCommand(path, _documentEditor)
+                            : new ClearTextCommand(path, _documentEditor, isTextFile: true);
                         _undoRedoService.ExecuteCommand(clearCmd);
                         break;
 
@@ -172,6 +342,7 @@ namespace ConsoleWord.Application.Services
                 }
             }
         }
+
 
 
     }

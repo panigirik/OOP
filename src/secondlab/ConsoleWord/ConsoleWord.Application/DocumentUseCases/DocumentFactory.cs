@@ -29,7 +29,68 @@ public class DocumentFactory
 
         return document;
     }
+    
+    public static Document LoadFromStream(Stream stream, string fileName)
+    {
+        var extension = Path.GetExtension(fileName).ToLowerInvariant();
 
+        stream.Position = 0;
+
+        return extension switch
+        {
+            ".docx" => LoadDocx(stream),
+            ".json" => LoadJson(stream),
+            ".xml" => LoadXml(stream),
+            ".md"   => LoadMarkdown(stream),
+            _ => throw new NotSupportedException("Unsupported file format.")
+        };
+    }
+
+    private static Document LoadDocx(Stream stream)
+    {
+        using var wordDoc = WordprocessingDocument.Open(stream, false); // false = read-only
+        var body = wordDoc.MainDocumentPart.Document.Body;
+        string text = body.InnerText;
+
+        return new Document
+        {
+            Name = Guid.NewGuid().ToString(),
+            Content = new StringBuilder(text),
+            Font = "Times New Roman", // можно подставить значения по умолчанию
+            TextSize = 12,            // по умолчанию, если точные значения не извлекаются
+            IsBold = false,
+            IsItalic = false,
+            IsUnderline = false
+        };
+    }
+
+
+    private static Document LoadJson(Stream stream)
+    {
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        string json = reader.ReadToEnd();
+        return JsonSerializer.Deserialize<Document>(json);
+    }
+
+    private static Document LoadXml(Stream stream)
+    {
+        var serializer = new XmlSerializer(typeof(Document));
+        return (Document)serializer.Deserialize(stream);
+    }
+
+    private static Document LoadMarkdown(Stream stream)
+    {
+        using var reader = new StreamReader(stream);
+        string content = reader.ReadToEnd();
+    
+        return new Document
+        {
+            Name = "ImportedFromMarkdown",
+            Content = new StringBuilder(content) 
+        };
+    }
+
+    
     public string SaveDocument(Document document, string directory, string format)
     {
         string filePath = Path.Combine(directory, document.Name + $".{format}");
@@ -62,6 +123,27 @@ public class DocumentFactory
         }
     }
 
+    public static void SaveAsDocx(Document document, Stream outputStream)
+    {
+        using var wordDocument = WordprocessingDocument.Create(outputStream, DocumentFormat.OpenXml.WordprocessingDocumentType.Document, true);
+        MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+        mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new Body());
+        Body body = mainPart.Document.Body;
+
+        Paragraph paragraph = new Paragraph();
+        Run run = new Run(new Text(document.Content.ToString()));
+        RunProperties runProperties = new RunProperties
+        {
+            FontSize = new FontSize() { Val = (document.TextSize * 2).ToString() },
+            RunFonts = new RunFonts() { Ascii = document.Font }
+        };
+        run.PrependChild(runProperties);
+
+        paragraph.Append(run);
+        body.Append(paragraph);
+    }
+
+    
     public void SaveAsDocx(Document document, string filePath)
     {
         using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
@@ -85,6 +167,33 @@ public class DocumentFactory
         }
     }
 
+    public static void SaveAsJson(Document document, Stream stream)
+    {
+        using var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true });
+        JsonSerializer.Serialize(writer, document);
+    }
+
+    public static void SaveAsXml(Document document, Stream stream)
+    {
+        XmlSerializer serializer = new XmlSerializer(typeof(Document));
+        serializer.Serialize(stream, document);
+    }
+
+    public static void SaveAsMarkdown(Document document, Stream stream)
+    {
+        using var writer = new StreamWriter(stream);
+        writer.WriteLine($"# {document.Name}");
+        writer.WriteLine();
+
+        string content = document.Content.ToString();
+        if (document.IsBold) content = $"**{content}**";
+        if (document.IsItalic) content = $"*{content}*";
+        if (document.IsUnderline) content = $"<u>{content}</u>";
+
+        writer.WriteLine(content);
+    }
+
+    
     public void SaveAsXml(Document document, string filePath)
     {
         XmlSerializer serializer = new XmlSerializer(typeof(Document));
@@ -98,7 +207,7 @@ public class DocumentFactory
 
     public void SaveDocumentToCloud(Document document, string format)
     {
-        _storageService.UploadToCloud(document, format);
+        _storageService.UploadToCloudAsync(document, format);
         Console.WriteLine("Document uploaded to cloud (stub).");
     }
 

@@ -4,7 +4,7 @@ using ConsoleWord.Infrastracture.CloudStorage.Interfaces;
 
 namespace ConsoleWord.Infrastracture.CloudStorage.Services
 {
-    public class CloudFileStorage : ICloudStorageProvider
+    public class CloudFileStorage 
     {
         // Метод для загрузки документа в облако
         public void UploadDocument(Document doc, string cloudPath)

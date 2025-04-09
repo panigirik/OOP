@@ -1,15 +1,18 @@
-﻿using ConsoleWord.Core.Entities;
+﻿using ConsoleWord.Application.DocumentUseCases;
+using ConsoleWord.Application.Dropbox;
+using ConsoleWord.Core.Entities;
 using ConsoleWord.Infrastracture.CloudStorage.Interfaces;
 using ConsoleWord.Infrastracture.LocalStorage.Interfaces;
+
 
 namespace ConsoleWord.Infrastracture;
 
 public class StorageService
 {
     private readonly IStorageProvider _localStorage;
-    private readonly ICloudStorageProvider _cloudStorage;
+    private readonly ICloudDropBoxStorageProvider _cloudStorage;
 
-    public StorageService(IStorageProvider localStorage, ICloudStorageProvider cloudStorage)
+    public StorageService(IStorageProvider localStorage, ICloudDropBoxStorageProvider cloudStorage)
     {
         _localStorage = localStorage;
         _cloudStorage = cloudStorage;
@@ -25,13 +28,39 @@ public class StorageService
         return _localStorage.Load(path);
     }
 
-    public void UploadToCloud(Document doc, string cloudPath)
+    public async Task<Document> DownloadFromCloudAsync(string cloudPath)
     {
-        _cloudStorage.Upload(doc, cloudPath);
+        byte[] fileBytes = await _cloudStorage.DownloadFileAsync(cloudPath);
+
+        using var stream = new MemoryStream(fileBytes);
+        return DocumentFactory.LoadFromStream(stream, cloudPath); // метод, распознающий формат по расширению
     }
 
-    public Document DownloadFromCloud(string cloudPath)
+    public async Task UploadToCloudAsync(Document document, string format)
     {
-        return _cloudStorage.Download(cloudPath);
+        string fileName = document.Name + "." + format;
+        byte[] fileContent;
+
+        using (var stream = new MemoryStream())
+        {
+            switch (format)
+            {
+                case "docx":
+                    DocumentFactory.SaveAsDocx(document, stream); break;
+                case "json":
+                    DocumentFactory.SaveAsJson(document, stream); break;
+                case "xml":
+                    DocumentFactory.SaveAsXml(document, stream); break;
+                case "md":
+                    DocumentFactory.SaveAsMarkdown(document, stream); break;
+                default:
+                    Console.WriteLine("Unsupported format");
+                    return;
+            }
+
+            fileContent = stream.ToArray();
+        }
+
+        await _cloudStorage.UploadFileAsync(fileName, fileContent);
     }
 }

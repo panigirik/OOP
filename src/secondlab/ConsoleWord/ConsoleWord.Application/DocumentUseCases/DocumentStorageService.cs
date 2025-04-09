@@ -17,7 +17,7 @@ public class DocumentStorageService
 
     public void SaveDocumentToCloud(Document document, string format)
     {
-        _storageService.UploadToCloud(document, format);
+        _storageService.UploadToCloudAsync(document, format);
         Console.WriteLine("Document uploaded to cloud.");
     }
 

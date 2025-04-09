@@ -2,7 +2,7 @@
 
 namespace ConsoleWord.Infrastracture.CloudStorage.Interfaces;
 
-public interface ICloudStorageProvider
+public interface ICloudOperationsStorageProvider
 {
     void Upload(Document doc, string cloudPath);
     Document Download(string cloudPath);

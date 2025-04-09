@@ -1,17 +1,15 @@
-﻿using ConsoleWord.Application.Interfaces;
+﻿using ConsoleWord.Application.Commands;
 
-namespace ConsoleWord.Application.Services;
-
-public class CommandService
+public class UndoRedoService
 {
-    private Stack<ICommand> _undoStack = new();
-    private Stack<ICommand> _redoStack = new();
+    private readonly Stack<IDocumentCommand> _undoStack = new();
+    private readonly Stack<IDocumentCommand> _redoStack = new();
 
-    public void ExecuteCommand(ICommand command)
+    public void ExecuteCommand(IDocumentCommand command)
     {
         command.Execute();
         _undoStack.Push(command);
-        _redoStack.Clear();
+        _redoStack.Clear(); // при новом действии redo сбрасывается
     }
 
     public void Undo()

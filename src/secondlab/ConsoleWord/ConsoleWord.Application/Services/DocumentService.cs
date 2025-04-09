@@ -4,13 +4,13 @@ using ConsoleWord.Infrastracture;
 using System.Xml.Serialization;
 using System.Text.Json;
 using System.Text;
+using ConsoleWord.Application.Commands;
 using ConsoleWord.Application.DocumentUseCases;
 using ConsoleWord.Core.Entities;
 using ConsoleWord.Infrastracture.Formatting;
 using Spectre.Console;
 using Document = ConsoleWord.Core.Entities.Document;
-using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
-using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
+
 
 namespace ConsoleWord.Application.Services
 {
@@ -22,13 +22,15 @@ namespace ConsoleWord.Application.Services
         private readonly DocumentEditor _documentEditor;
         private readonly DocumentLoader _documentLoader;
         private readonly InputHelper _inputHelper;
+        private readonly UndoRedoService _undoRedoService;
 
         public DocumentService(StorageService storageService,
             DocumentFactory documentFactory,
             DocumentStorageService documentStorageService,
             DocumentEditor documentEditor,
             DocumentLoader documentLoader,
-            InputHelper inputHelper)
+            InputHelper inputHelper,
+            UndoRedoService undoRedoService)
         {
             _storageService = storageService;
             _documentFactory = documentFactory;
@@ -36,6 +38,7 @@ namespace ConsoleWord.Application.Services
             _documentEditor = documentEditor;
             _documentLoader = documentLoader;
             _inputHelper = inputHelper;
+            _undoRedoService = undoRedoService;
         }
 
         public void CreateAndSaveDocument()
@@ -49,36 +52,41 @@ namespace ConsoleWord.Application.Services
             bool isItalic = AnsiConsole.Confirm("Make text italic? (y/n)", false);
             bool isUnderline = AnsiConsole.Confirm("Make text underlined? (y/n)", false);
 
-            var document = new Document(documentName, documentText, font, textSize);
-            document.IsBold = isBold;
-            document.IsItalic = isItalic;
-            document.IsUnderline = isUnderline;
+            var document = new Document(documentName, documentText, font, textSize)
+            {
+                IsBold = isBold,
+                IsItalic = isItalic,
+                IsUnderline = isUnderline
+            };
 
-            string format = AnsiConsole.Ask<string>("Choose format (docx/xml/json): ").ToLower();
-            string storageType = AnsiConsole.Ask<string>("Where do you want to save the document? (local/cloud): ").ToLower();
+            var format = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Choose format:")
+                    .AddChoices("docx", "xml", "json", "md")
+            );
 
-            string? savedPath = null;
+            var storageType = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Where do you want to save the document?")
+                    .AddChoices("local", "cloud")
+            );
 
             if (storageType == "local")
             {
                 string directory = AnsiConsole.Ask<string>("Enter save directory: ");
-                savedPath = _documentStorageService.SaveDocumentLocally(document, directory, format);
+                var createCommand = new CreateDocumentCommand(document, directory, format, _documentStorageService);
+                _undoRedoService.ExecuteCommand(createCommand);
+
+                if (format == "docx")
+                {
+                    var savedPath = Path.Combine(directory, $"{documentName}.docx");
+                    var formatter = new OpenXmlFormatter();
+                    formatter.ApplyTextDecorations(savedPath, isBold, isItalic, isUnderline);
+                }
             }
             else if (storageType == "cloud")
             {
                 _documentStorageService.SaveDocumentToCloud(document, format);
-                return;
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("[red]Invalid storage type.[/]");
-                return;
-            }
-
-            if (format == "docx" && savedPath != null)
-            {
-                var formatter = new OpenXmlFormatter();
-                formatter.ApplyTextDecorations(savedPath, isBold, isItalic, isUnderline);
             }
 
             AnsiConsole.MarkupLine("[green]Document created and saved.[/]");
@@ -86,30 +94,21 @@ namespace ConsoleWord.Application.Services
         }
 
 
-
-
-
-        
-        private Document LoadMarkdown(string filePath)
+        public void DeleteDocumentByPath()
         {
-            var lines = File.ReadAllLines(filePath);
-            if (lines.Length == 0)
-                throw new InvalidOperationException("Empty markdown file");
+            string path = AnsiConsole.Ask<string>("Enter full file path to delete:");
 
-            string name = Path.GetFileNameWithoutExtension(filePath);
-            var content = new StringBuilder();
-
-            for (int i = 1; i < lines.Length; i++) // пропускаем заголовок
+            if (!File.Exists(path))
             {
-                content.AppendLine(lines[i]);
+                AnsiConsole.MarkupLine("[red]File not found. Nothing to delete.[/]");
+                return;
             }
 
-            return new Document(name, content.ToString(), "Arial", 12);
+            var deleteCommand = new DeleteDocumentCommand(path);
+            _undoRedoService.ExecuteCommand(deleteCommand);
+
+            AnsiConsole.MarkupLine("[green]Document successfully deleted.[/]");
         }
-
-
-
-        
 
         
         public void OpenAndEditDocument(User currentUser)
@@ -130,7 +129,7 @@ namespace ConsoleWord.Application.Services
                 AnsiConsole.WriteLine(content);
                 AnsiConsole.MarkupLine("[bold]------------------------[/]");
 
-                List<string> actions = new() { "Show Content", "Exit Edit" };
+                List<string> actions = new() { "Show Content", "Undo", "Redo", "Exit Edit" };
 
                 if (currentUser.Role.HasPermission("Edit"))
                 {
@@ -148,11 +147,21 @@ namespace ConsoleWord.Application.Services
                 {
                     case "Append Text":
                         string toAppend = AnsiConsole.Ask<string>("Enter text to append:");
-                        _documentEditor.AppendTextToDocx(path, toAppend);
+                        var appendCmd = new AppendTextCommand(path, toAppend, _documentEditor);
+                        _undoRedoService.ExecuteCommand(appendCmd);
                         break;
 
                     case "Delete All Text":
-                        _documentEditor.ClearDocxContent(path);
+                        var clearCmd = new ClearTextCommand(path, _documentEditor);
+                        _undoRedoService.ExecuteCommand(clearCmd);
+                        break;
+
+                    case "Undo":
+                        _undoRedoService.Undo();
+                        break;
+
+                    case "Redo":
+                        _undoRedoService.Redo();
                         break;
 
                     case "Show Content":
@@ -163,77 +172,6 @@ namespace ConsoleWord.Application.Services
                 }
             }
         }
-
-        
-        public void EditDocument(string path)
-        {
-            if (!File.Exists(path))
-            {
-                Console.WriteLine("File does not exist.");
-                return;
-            }
-
-            while (true)
-            {
-                Console.WriteLine("Choose an action: [1] Append Text [2] Delete All Text [3] Show Content [4] Exit Edit");
-                string choice = Console.ReadLine();
-
-                switch (choice)
-                {
-                    case "1":
-                        Console.Write("Enter text to append: ");
-                        string newText = Console.ReadLine();
-                        _documentEditor.AppendTextToDocx(path, newText);
-                        break;
-                    case "2":
-                        _documentEditor.ClearDocxContent(path);
-                        break;
-                    case "3":
-                        Console.WriteLine(_documentEditor.ReadDocxContent(path));
-                        break;
-                    case "4":
-                        return;
-                    default:
-                        Console.WriteLine("Invalid option.");
-                        break;
-                }
-            }
-        }
-
-        
-
-
-
-        
-        public Document LoadDocument()
-        {
-            string filePath = _inputHelper.GetUserInput("Enter full file path to open: ");
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine("File does not exist.");
-                return null;
-            }
-
-            string extension = Path.GetExtension(filePath).ToLower();
-
-            try
-            {
-                return extension switch
-                {
-                    ".docx" => _documentLoader.LoadDocx(filePath),
-                    ".xml" => _documentLoader.LoadXml(filePath),
-                    ".json" => _documentLoader.LoadJson(filePath),
-                    _ => throw new InvalidOperationException("Unsupported file format")
-                };
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load document: {ex.Message}");
-                return null;
-            }
-        }
-
-
 
 
     }

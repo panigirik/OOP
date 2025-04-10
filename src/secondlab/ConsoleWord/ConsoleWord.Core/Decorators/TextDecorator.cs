@@ -14,11 +14,10 @@ namespace ConsoleWord.Core.Decorators
         }
 
         public abstract void InsertText(string text);
-
-        // Allow InsertText from the base document if needed
+        
         public virtual void InsertBaseText(Run run)
         {
-            _document.InsertText(run);  // Delegate to the base Document class
+            _document.InsertText(run); 
         }
     }
 }

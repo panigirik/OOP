@@ -10,10 +10,7 @@ namespace ConsoleWord.Core.Decorators
 
         public override void InsertText(string text)
         {
-            // Create a Run with the provided text
             Run run = new Run(new Text(text));
-
-            // Apply italic to the RunProperties
             RunProperties runProperties = run.GetFirstChild<RunProperties>();
             if (runProperties == null)
             {
@@ -21,8 +18,6 @@ namespace ConsoleWord.Core.Decorators
                 run.PrependChild(runProperties);
             }
             runProperties.Append(new Italic());
-
-            // Delegate the actual insertion of the run to the base Document
             InsertBaseText(run);
         }
     }

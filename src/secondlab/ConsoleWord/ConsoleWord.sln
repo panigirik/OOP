@@ -8,6 +8,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleWord.Application", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleWord.Infrastracture", "ConsoleWord.Infrastracture\ConsoleWord.Infrastracture.csproj", "{D41EDB64-17C8-42F0-92ED-0245B1343B64}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConsoleWord.Tests", "ConsoleWord.Tests", "{20FC6AD8-5CE3-4C56-B145-8913C3E11845}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleWord.Tests.Commands", "ConsoleWord.Tests.Commands\ConsoleWord.Tests.Commands.csproj", "{E43C5AF3-CD2A-4DB8-B461-375625568C3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleWord.Tests.UseCases", "ConsoleWord.Tests.UseCases\ConsoleWord.Tests.UseCases.csproj", "{51C42158-FFB7-4385-A06A-0909DFE4730A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +36,17 @@ Global
 		{D41EDB64-17C8-42F0-92ED-0245B1343B64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D41EDB64-17C8-42F0-92ED-0245B1343B64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D41EDB64-17C8-42F0-92ED-0245B1343B64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E43C5AF3-CD2A-4DB8-B461-375625568C3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E43C5AF3-CD2A-4DB8-B461-375625568C3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E43C5AF3-CD2A-4DB8-B461-375625568C3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E43C5AF3-CD2A-4DB8-B461-375625568C3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51C42158-FFB7-4385-A06A-0909DFE4730A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51C42158-FFB7-4385-A06A-0909DFE4730A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51C42158-FFB7-4385-A06A-0909DFE4730A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51C42158-FFB7-4385-A06A-0909DFE4730A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E43C5AF3-CD2A-4DB8-B461-375625568C3D} = {20FC6AD8-5CE3-4C56-B145-8913C3E11845}
+		{51C42158-FFB7-4385-A06A-0909DFE4730A} = {20FC6AD8-5CE3-4C56-B145-8913C3E11845}
 	EndGlobalSection
 EndGlobal

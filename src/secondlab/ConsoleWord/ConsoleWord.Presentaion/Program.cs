@@ -2,8 +2,8 @@
 using ConsoleWord.Application.Commands;
 using ConsoleWord.Application.DocumentUseCases;
 using ConsoleWord.Application.Dropbox;
+using ConsoleWord.Application.Helpers;
 using ConsoleWord.Application.Services;
-using ConsoleWord.Infrastracture;
 using ConsoleWord.Infrastracture.CloudStorage.Services;
 using ConsoleWord.Infrastracture.LocalStorage.Interfaces;
 using Hangfire;
@@ -43,14 +43,19 @@ class Program
                 services.AddScoped<IDocumentCommand, DeleteDocumentCommand>();
                 services.AddSingleton<UndoRedoService>();
                 services.AddSingleton<AuthenticationService>();
+
+
+                
                 services.AddSingleton<FormattingService>();
                 services.AddSingleton<CloudFileStorage>();
                 services.AddSingleton<DocumentEditor>();
                 services.AddSingleton<DocumentFactory>();
-                services.AddSingleton<DocumentLoader>();
                 services.AddSingleton<DocumentStorageService>();
-                services.AddSingleton<InputHelper>();
                 services.AddSingleton<DocumentService>();
+                
+                services.AddScoped<NotifySubscribersHelper>();
+                services.AddScoped<ShowAuthenticationOptionsHepler>();
+                
                 services.AddSingleton<Menu>();  // Menu будет использовать ICloudStorageProvider
 
                 // Регистрация Hangfire

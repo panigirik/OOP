@@ -1,5 +1,4 @@
-﻿
-using ConsoleWord.Core.Entities;
+﻿using ConsoleWord.Core.Entities;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Packaging;
 using Path = System.IO.Path;
@@ -65,35 +64,6 @@ public class DocumentEditor
         return document;
     }
 
-    public void RemoveLastAppendedText(string path, int textLength)
-    {
-        using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(path, true))
-        {
-            var body = wordDoc.MainDocumentPart.Document.Body;
-            var lastParagraph = body.Elements<Paragraph>().LastOrDefault();
-
-            if (lastParagraph != null)
-            {
-                var run = lastParagraph.Elements<Run>().LastOrDefault();
-                var textElement = run?.Elements<Text>().LastOrDefault();
-
-                if (textElement != null && !string.IsNullOrEmpty(textElement.Text))
-                {
-                    if (textElement.Text.Length > textLength)
-                    {
-                        textElement.Text = textElement.Text[..^textLength];
-                    }
-                    else
-                    {
-                        lastParagraph.Remove(); // удаляем весь параграф, если весь текст — это добавленное
-                    }
-                }
-
-                wordDoc.MainDocumentPart.Document.Save();
-            }
-        }
-    }
-
     public void OverwriteTextFile(string path, string newText)
     {
         File.WriteAllText(path, newText);
@@ -126,11 +96,6 @@ public class DocumentEditor
     {
         File.AppendAllText(path, textToAppend + Environment.NewLine);
     }
-
     
-    public void ClearTextFileContent(string path)
-    {
-        File.WriteAllText(path, string.Empty);
-    }
     
 }

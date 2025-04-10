@@ -1,4 +1,5 @@
-﻿using ConsoleWord.Core.Entities;
+﻿using ConsoleWord.Application.Services;
+using ConsoleWord.Core.Entities;
 using ConsoleWord.Infrastracture;
 
 namespace ConsoleWord.Application.DocumentUseCases;

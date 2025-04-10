@@ -1,12 +1,10 @@
 ﻿using ConsoleWord.Application.DocumentUseCases;
 using ConsoleWord.Application.Dropbox;
 using ConsoleWord.Core.Entities;
-using ConsoleWord.Infrastracture.CloudStorage.Interfaces;
 using ConsoleWord.Infrastracture.LocalStorage.Interfaces;
 using Spectre.Console;
 
-
-namespace ConsoleWord.Infrastracture;
+namespace ConsoleWord.Application.Services;
 
 public class StorageService
 {

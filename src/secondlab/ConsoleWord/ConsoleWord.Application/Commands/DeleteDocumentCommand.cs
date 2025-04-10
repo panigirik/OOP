@@ -1,8 +1,4 @@
-﻿using ConsoleWord.Application.DocumentUseCases;
-using System;
-using System.IO;
-
-namespace ConsoleWord.Application.Commands
+﻿namespace ConsoleWord.Application.Commands
 {
     public class DeleteDocumentCommand : IDocumentCommand
     {

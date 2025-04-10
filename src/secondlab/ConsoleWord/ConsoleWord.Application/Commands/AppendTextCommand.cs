@@ -1,5 +1,4 @@
 ﻿using ConsoleWord.Application.DocumentUseCases;
-using ConsoleWord.Application.Interfaces;
 
 namespace ConsoleWord.Application.Commands
 {

@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Xml.Serialization;
+using ConsoleWord.Application.Services;
 using ConsoleWord.Infrastracture;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -51,7 +52,7 @@ public class DocumentFactory
 
     private static Document LoadDocx(Stream stream)
     {
-        using var wordDoc = WordprocessingDocument.Open(stream, false); // false = read-only
+        using var wordDoc = WordprocessingDocument.Open(stream, false); 
         var body = wordDoc.MainDocumentPart.Document.Body;
         string text = body.InnerText;
 
@@ -59,8 +60,8 @@ public class DocumentFactory
         {
             Name = Guid.NewGuid().ToString(),
             Content = new StringBuilder(text),
-            Font = "Times New Roman", // можно подставить значения по умолчанию
-            TextSize = 12,            // по умолчанию, если точные значения не извлекаются
+            Font = "Times New Roman",
+            TextSize = 12,           
             IsBold = false,
             IsItalic = false,
             IsUnderline = false
@@ -172,8 +173,7 @@ public class DocumentFactory
                 RunFonts = new RunFonts() { Ascii = document.Font }
             };
             run.PrependChild(runProperties);
-
-            // These will be overridden later with ApplyTextDecorations
+            
             paragraph.Append(run);
             body.Append(paragraph);
         }
@@ -233,18 +233,14 @@ public class DocumentFactory
     public void SaveAsMarkdown(Document document, string filePath)
     {
         var sb = new StringBuilder();
-
-        // Пример простой разметки markdown: жирный, курсив, подчеркивание
         sb.AppendLine($"# {document.Name}");
         sb.AppendLine();
-
-        // Можно применить базовые markdown-стили (как опцию — расширяемо)
+        
         string content = document.Content.ToString();
-
-        // Обработка базовых стилей (например, жирный шрифт как **text**)
+        
         if (document.IsBold) content = $"**{content}**";
         if (document.IsItalic) content = $"*{content}*";
-        if (document.IsUnderline) content = $"<u>{content}</u>"; // Markdown не поддерживает underline напрямую
+        if (document.IsUnderline) content = $"<u>{content}</u>"; 
 
         sb.AppendLine(content);
 

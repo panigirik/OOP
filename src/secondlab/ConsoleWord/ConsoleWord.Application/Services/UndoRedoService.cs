@@ -9,7 +9,7 @@ public class UndoRedoService
     {
         command.Execute();
         _undoStack.Push(command);
-        _redoStack.Clear(); // при новом действии redo сбрасывается
+        _redoStack.Clear();
     }
 
     public void Undo()

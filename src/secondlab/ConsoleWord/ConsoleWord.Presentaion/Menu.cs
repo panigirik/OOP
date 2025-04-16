@@ -17,6 +17,7 @@ namespace ConsoleWord
         private readonly NotifySubscribersHelper _notifySubscribersHelper;
         public User _currentUser;
         private readonly ShowAuthenticationOptionsHepler _showAuthentication;
+        private readonly PermissionManager _permissionManager;
         
         public Menu(DocumentService documentService, 
             AuthenticationService authenticationService,
@@ -25,7 +26,8 @@ namespace ConsoleWord
             DocumentEditor documentEditor,
             UndoRedoService undoRedoService,
             NotifySubscribersHelper notifySubscribersHelper,
-            ShowAuthenticationOptionsHepler showAuthentication)
+            ShowAuthenticationOptionsHepler showAuthentication,
+            PermissionManager permissionManager)
         {
             _documentService = documentService;
             _authenticationService = authenticationService;
@@ -35,6 +37,7 @@ namespace ConsoleWord
             _undoRedoService = undoRedoService;
             _notifySubscribersHelper = notifySubscribersHelper;
             _showAuthentication = showAuthentication;
+            _permissionManager = permissionManager;
         }
 
         public void Show()
@@ -63,24 +66,32 @@ namespace ConsoleWord
 
                 
                 if (_currentUser.Role.RoleName == "Admin" || _currentUser.Role.HasPermission("Create"))
+                {
                     options.Add("Create new document");
+                    options.Add("deleteUserByUsername");
+                    options.Add("ManagePermissions");
+                }
 
-
+                    
                 if (_currentUser.Role.HasPermission("Delete"))
                     options.Add("Delete Document");
 
-               
                 if (_currentUser.Role.HasPermission("Read"))
+                {
                     options.Add("Open document");
                     options.Add("searchText");
                     options.Add("Undo");
                     options.Add("Redo");
-                
+                }
+
                 if (_currentUser.Role.HasPermission("Edit"))
+                {
                     options.Add("Edit document");
                     options.Add("searchText");
                     options.Add("Undo");
                     options.Add("Redo");
+                }
+
 
                 
                 options.Add("Logout");
@@ -109,6 +120,14 @@ namespace ConsoleWord
                         _documentService.SearchTextInDocument(_currentUser);
                         break;
 
+                    case "deleteUserByUsername":
+                        _showAuthentication.DeleteUserByUsername();
+                        break;
+                    
+                    case "ManagePermissions":
+                        _permissionManager.ManagePermissions();
+                        break;
+                    
                     case "Edit document":
                         _documentService.OpenAndEditDocument(_currentUser);
                         _notifySubscribersHelper.NotifySubscribers(_currentUser.Username, $"{_currentUser.Username} edit document.");

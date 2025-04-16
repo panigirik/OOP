@@ -1,5 +1,6 @@
 ﻿using ConsoleWord.Application.Services;
 using ConsoleWord.Core.Entities;
+using ConsoleWord.Core.Roles;
 using Spectre.Console;
 
 namespace ConsoleWord.Application.Helpers;
@@ -125,5 +126,43 @@ private void AuthenticateUser()
         AnsiConsole.MarkupLine("[green]Registration successful![/]");
         AuthenticateUser();
     }
+    
+    
+    
+    public void DeleteUserByUsername()
+    {
+        string filePath = "users.txt"; // путь к файлу с пользователями
+        if (!File.Exists(filePath))
+        {
+            AnsiConsole.MarkupLine("[red]User file not found.[/]");
+            return;
+        }
+
+        string usernameToDelete = AnsiConsole.Ask<string>("Enter the [red]username[/] of the user to delete:");
+
+        var lines = File.ReadAllLines(filePath).ToList();
+        int originalCount = lines.Count;
+
+        // Удаляем строки, в которых имя пользователя совпадает с введённым
+        lines = lines.Where(line =>
+        {
+            var parts = line.Split(':');
+            return parts.Length != 3 || !parts[0].Equals(usernameToDelete, StringComparison.OrdinalIgnoreCase);
+        }).ToList();
+
+        if (lines.Count == originalCount)
+        {
+            AnsiConsole.MarkupLine($"[yellow]No user found with username '{usernameToDelete}'.[/]");
+        }
+        else
+        {
+            File.WriteAllLines(filePath, lines);
+            AnsiConsole.MarkupLine($"[green]User '{usernameToDelete}' has been deleted successfully.[/]");
+        }
+    }
+
+            
+
+
     
 }

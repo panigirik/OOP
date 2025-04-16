@@ -4,13 +4,8 @@ namespace ConsoleWord.Core.Roles;
 
 public class EditorRole : UserRole
 {
-    public EditorRole() : base("Editor")
+    public EditorRole(List<string> permissions) : base("Editor")
     {
-        Permissions.AddRange(new[] { "Read", "Edit" });
-    }
-
-    public override void AccessDocument(Document doc)
-    {
-        Console.WriteLine($"Editor is editing the document: {doc.Name}");
+        Permissions.AddRange(permissions);
     }
 }

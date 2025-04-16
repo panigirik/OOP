@@ -1,5 +1,6 @@
 ﻿using ConsoleWord.Core.Entities;
 using ConsoleWord.Core.Roles;
+using ConsoleWord.Application.Helpers;
 
 namespace ConsoleWord.Application.Services
 {
@@ -22,6 +23,8 @@ namespace ConsoleWord.Application.Services
                 return;
             }
 
+            var permissionManager = new PermissionManager();
+
             foreach (var line in File.ReadAllLines(UsersFilePath))
             {
                 var parts = line.Split(':');
@@ -34,8 +37,8 @@ namespace ConsoleWord.Application.Services
                     UserRole userRole = role switch
                     {
                         "Admin" => new AdminRole(),
-                        "Editor" => new EditorRole(),
-                        "Viewer" => new ViewerRole(),
+                        "Editor" => new EditorRole(permissionManager.GetPermissionsForRole("Editor")),
+                        "Viewer" => new ViewerRole(permissionManager.GetPermissionsForRole("Viewer")),
                         _ => throw new Exception("Unknown role!")
                     };
 
@@ -61,20 +64,20 @@ namespace ConsoleWord.Application.Services
                 return;
             }
 
+            var permissionManager = new PermissionManager();
             UserRole userRole = role switch
             {
                 "Admin" => new AdminRole(),
-                "Editor" => new EditorRole(),
-                "Viewer" => new ViewerRole(),
+                "Editor" => new EditorRole(permissionManager.GetPermissionsForRole("Editor")),
+                "Viewer" => new ViewerRole(permissionManager.GetPermissionsForRole("Viewer")),
                 _ => throw new Exception("Unknown role!")
             };
 
             var newUser = new User(username, password, userRole);
             _users.Add(username, newUser);
 
-           File.AppendAllLines(UsersFilePath, new[] { $"{username}:{password}:{role}" });
+            File.AppendAllLines(UsersFilePath, new[] { $"{username}:{password}:{role}" });
             Console.WriteLine("User registered successfully!");
         }
-
     }
 }

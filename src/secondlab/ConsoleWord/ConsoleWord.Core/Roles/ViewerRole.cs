@@ -4,13 +4,8 @@ namespace ConsoleWord.Core.Roles;
 
 public class ViewerRole : UserRole
 {
-    public ViewerRole() : base("Viewer")
+    public ViewerRole(List<string> permissions) : base("Viewer")
     {
-        Permissions.Add("Read");
-    }
-
-    public override void AccessDocument(Document doc)
-    {
-        Console.WriteLine($"Viewer is reading the document: {doc.Name}");
+        Permissions.AddRange(permissions);
     }
 }

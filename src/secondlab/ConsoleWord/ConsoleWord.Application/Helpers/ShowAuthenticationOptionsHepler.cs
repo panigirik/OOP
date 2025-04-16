@@ -7,7 +7,7 @@ namespace ConsoleWord.Application.Helpers;
 public class ShowAuthenticationOptionsHepler
 {
     private readonly NotificationService _notificationService;
-    private User _currentUser;
+    public User _currentUser;
     private readonly AuthenticationService _authenticationService;
     
     public ShowAuthenticationOptionsHepler(NotificationService notificationService,
@@ -43,52 +43,66 @@ public class ShowAuthenticationOptionsHepler
     }
 
     
-    private void AuthenticateUser()
+private void AuthenticateUser()
+{
+    AnsiConsole.MarkupLine("[bold]Please log in to continue.[/]");
+
+    int maxAttempts = 3;  // Define a maximum number of attempts
+    int attempts = 0;
+
+    while (attempts < maxAttempts)
     {
-        AnsiConsole.MarkupLine("[bold]Please log in to continue.[/]");
+        string username = AnsiConsole.Ask<string>("Enter [green]Username[/]:");
+        string password = AnsiConsole.Prompt(
+            new TextPrompt<string>("Enter [green]Password[/]:")
+                .PromptStyle("red")
+                .Secret());
 
-        while (true)
+        _currentUser = _authenticationService.Authenticate(username, password);
+
+        if (_currentUser != null)
         {
-            string username = AnsiConsole.Ask<string>("Enter [green]Username[/]:");
-            string password = AnsiConsole.Prompt(
-                new TextPrompt<string>("Enter [green]Password[/]:")
-                    .PromptStyle("red")
-                    .Secret());
+            AnsiConsole.MarkupLine($"[green]Welcome, {_currentUser.Username}![/] Logged in as [blue]{_currentUser.Role.RoleName}[/].");
 
-            _currentUser = _authenticationService.Authenticate(username, password);
+            var notifications = _notificationService.GetUserNotifications(_currentUser.Username);
 
-            if (_currentUser != null)
+            if (notifications.Any())
             {
-                AnsiConsole.MarkupLine($"[green]Welcome, {_currentUser.Username}![/] Logged in as [blue]{_currentUser.Role.RoleName}[/].");
+                AnsiConsole.MarkupLine($"\n[bold underline fuchsia]You have {notifications.Count} new notification(s):[/]");
 
-
-                var notifications = _notificationService.GetUserNotifications(_currentUser.Username);
-
-                if (notifications.Any())
+                foreach (var note in notifications)
                 {
-                    AnsiConsole.MarkupLine($"\n[bold underline fuchsia]You have {notifications.Count} new notification(s):[/]");
-
-                    foreach (var note in notifications)
-                    {
-                        AnsiConsole.Write(
-                            new Panel($"[white]{note}[/]")
-                                .Border(BoxBorder.Double)
-                                .BorderStyle(new Style(foreground: Color.Fuchsia))
-                                .Padding(1, 0, 1, 0)
-                        );
-                    }
-
-                    _notificationService.ClearUserNotifications(_currentUser.Username);
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine("\n[gray]No new notifications.[/]");
+                    AnsiConsole.Write(
+                        new Panel($"[white]{note}[/]")
+                            .Border(BoxBorder.Double)
+                            .BorderStyle(new Style(foreground: Color.Fuchsia))
+                            .Padding(1, 0, 1, 0)
+                    );
                 }
 
-                break;
+                _notificationService.ClearUserNotifications(_currentUser.Username);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("\n[gray]No new notifications.[/]");
+            }
+
+            break;
+        }
+        else
+        {
+            attempts++;
+            AnsiConsole.MarkupLine("[red]Invalid credentials. Please try again.[/]");
+
+            if (attempts == maxAttempts)
+            {
+                AnsiConsole.MarkupLine("[red]Maximum login attempts reached. Exiting authentication.[/]");
+                break;  // Exit the loop after max attempts
             }
         }
     }
+}
+
 
     
     private void RegisterUser()

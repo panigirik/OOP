@@ -55,8 +55,8 @@ class Program
                 
                 services.AddScoped<NotifySubscribersHelper>();
                 services.AddScoped<ShowAuthenticationOptionsHepler>();
-                
-                services.AddSingleton<Menu>();  // Menu будет использовать ICloudStorageProvider
+                services.AddScoped<Menu>();
+
 
                 // Регистрация Hangfire
                 services.AddHangfire(config => config.UseMemoryStorage());

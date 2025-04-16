@@ -15,7 +15,7 @@ namespace ConsoleWord
         private readonly DocumentEditor _documentEditor;
         private readonly UndoRedoService _undoRedoService;
         private readonly NotifySubscribersHelper _notifySubscribersHelper;
-        private User _currentUser;
+        public User _currentUser;
         private readonly ShowAuthenticationOptionsHepler _showAuthentication;
         
         public Menu(DocumentService documentService, 
@@ -39,7 +39,19 @@ namespace ConsoleWord
 
         public void Show()
         {
-            _currentUser = _showAuthentication.ShowAuthenticationOptions(); 
+            _currentUser = _showAuthentication.ShowAuthenticationOptions();
+
+            if (_currentUser == null)
+            {
+                AnsiConsole.MarkupLine("[bold red]Error: Authentication failed. User is null.[/]");
+                return;
+            }
+
+            if (_currentUser.Role == null)
+            {
+                AnsiConsole.MarkupLine($"[bold yellow]Warning: User '{_currentUser.Username}' has no role assigned.[/]");
+                return;
+            } 
 
             while (true)
             {
@@ -60,11 +72,13 @@ namespace ConsoleWord
                
                 if (_currentUser.Role.HasPermission("Read"))
                     options.Add("Open document");
+                    options.Add("searchText");
                     options.Add("Undo");
                     options.Add("Redo");
                 
                 if (_currentUser.Role.HasPermission("Edit"))
                     options.Add("Edit document");
+                    options.Add("searchText");
                     options.Add("Undo");
                     options.Add("Redo");
 
@@ -89,6 +103,10 @@ namespace ConsoleWord
                     case "Open document":
                         _documentService.OpenAndEditDocument(_currentUser);
                         _notifySubscribersHelper.NotifySubscribers(_currentUser.Username, $"{_currentUser.Username} view document.");
+                        break;
+                    
+                    case "searchText":
+                        _documentService.SearchTextInDocument(_currentUser);
                         break;
 
                     case "Edit document":
@@ -208,9 +226,9 @@ namespace ConsoleWord
 
         private void Logout()
         {
-            _currentUser = null;
+            _currentUser = _showAuthentication.ShowAuthenticationOptions();
             AnsiConsole.MarkupLine("[gray]You have been logged out.[/]");
-            _showAuthentication.ShowAuthenticationOptions();
+            //_showAuthentication.ShowAuthenticationOptions();
         }
         
         private void SubscribeToUser()

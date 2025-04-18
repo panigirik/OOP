@@ -4,39 +4,31 @@ namespace ConsoleWord.Tests.UseCases.UseCases
 {
     public class AbstractTest
     {
-        // This is an abstract test with simple logic that doesn't actually test the code being tested
         [Fact]
         public void AbstractTest_MethodShouldReturnTrue()
         {
-            // Arrange
             int value1 = 5;
             int value2 = 10;
-
-            // Act
+            
             int result = value1 + value2;
-
-            // Assert
-            Assert.True(result == 15); // This just checks if the sum of value1 and value2 equals 15, unrelated to the logic in your code
+            
+            Assert.True(result == 15); 
         }
         
         [Fact]
         public void Concatenation_ShouldReturnCorrectString()
         {
-            // Arrange
             string part1 = "Hello";
             string part2 = "World";
-
-            // Act
+            
             string result = part1 + " " + part2;
-
-            // Assert
+            
             Assert.Equal("Hello World", result); // Simply checks string concatenation
         }
         
         [Fact]
         public void StringLength_ShouldReturnCorrectLength()
         {
-            // Arrange
             string text = "Test String";
 
             // Act

@@ -4,7 +4,8 @@ namespace ConsoleWord.Application.Dropbox
 {
     public class DropboxStorageProvider : ICloudDropBoxStorageProvider
     {
-        private const string AccessToken = "sl.u.AFqaBDYEnGUmAK1YOjrpkwq5Z3T24TQ4n7etriSWzCxe9yWoPfid7x-gDC9rBwbs-sKQz14TvvKiCCCsr4IJhsjByESftE-zIUktQAEyfWSJJirLu2mckCLWK4n1LhLeh7OO7J2EgtaOx3BTe93jExJnXqyNDVng9JkO666AE4xBHCTiZ9lkQiexPtzFDBekF0bPDBOr4IRW7T3BTd6II23WV8-J7FHY4hu5QqGgkQvif9if98inD6SZbS0M8taFpMbqi031IoFPJvz2lsd3a9mo7h1imRRg0f2zmvUVSeV1QcxEUetVpglBRbyGUyTAnEJ5nsgH1BSAcdFH3fDas37t9yIqB6nZ_Z_Nx0AM9h43pFRSWYO_fvEuSU8uCS1RJ-OTsLSizuk4UaXcCCyrLFu9CPgBswnr1XylSC1Dp_N70jB6ZJu7tpbyHGOuz2OKcEZ6h5KACAC4NH3btdZykjr1BNzzZ_qfHUxb2Q4lZc_jztmynC-MibJv7s0pMYhTXCon7Kv2iovBPu1k3cO78u1LUYYLyBnnNiJ5NN4xYQN63ezqMTuAAuAl15xFPP3LHcyMlMYYg4SxNGStfOnCWutfN0nGxOonSW7BTKI8a8gBRxjpV1bL-oOwjMh0r4L2d8EyrZuBD10K7_VstKMBxH77KojCm6UHZv0ejHu9bicjgdR3JI5wf44KJkC9oL0850BVqjjc3NaIvI-_4RnoygORw61PrOU8dwUhLc0zng-kqco9td0St9Cx299kOCwffH6M2bbF9B76t2kyiF3T76shRJhAhU6DYswlC4hY8L9bA2WEls3DZgcLKZSuqq3Z0bFe4UqifOfns9XkdZl7Gjh9ul0SpB1UISzzlDlwhi4_H5DFM2V1FuCWFDzrQ2vruV4501Y1oVexdMKqEuCFCWoPCHruPZN8TPVXddAKj1kfhz6f7FqkK9e96JfFNO-njzD7Us-Fxt9qS6MmsOKozvbMwpMhsrLVzlpthx2-O2sKauPUCwSVb8bVM9Jts9WLDVkFxjYXDhbuGfNaWCqqaV6Xa2AKC_Lt-mHLBWlSsEMHFB7l-VU0nFeNXo_WzVsZkGhHDjq7T93GPvqwGOGsvXsDlMpDxwS3nv62Qubs-cDsQoUY5aYHbdSVns2vFLmroBOuJJ5kCxp8CVSDkz8o0TMZraAnPiuTq1JW18zU7Y_X9vrHT8Z5i2iJ6UXTUQMiL8OuqY6x4shZ_q18nxf_NMFPQs_qyKtLrHC5q1mmA6rYumsT5qZGWdYswfY5MT6L4EH2GGffRw4QGi_TDvXYAtRjCgcWqOtTZe_YKsVbdDk5a7u08OhT93EqivBtt3Gc1kHs6QEjD4VeIPVxPbrWMP8XLtJNcQCsVk3KaFsZbEG2msL8ip1ysITSbVnTtz6c-wLAkdLwqTEgBsNYVP1WiqgUd5YgKlnrC3fqKYrRSD1aaQ"; // Укорочено для читаемости
+        private const string AccessToken = "sl.u.AFrpbvVqJyhpL_ccAK0PPkv0wKJAE79zmCQS1FKE2r2nCx9Zfu7DUhSeq0jB21AJV3oWRJnvz1fVaZN4Hx-Kri23PftVkJbVM2sqKLIe0YigYvTozj_rSpBehQgq0c4lKlHNJA8yKtdTsyXX09NZGcFdT5GwUJmNFWdFKUb2K3gSIrijusop3kkWytzIxAQWC_7OOZoqL5erACTU1N6Y3Qf7ia3TvSJbt3SA5tsfZ_QVYdemmlwUmtCG5NXPmC9Rp2KIox28bx_d0cfQoqb4cnIUTpM2Bhd82QPg_2Q4whctoSbZnq-DA_HqOXeyPlMYIOi7v2MG4u98gKgKNzgxLYbO6zGpHtoUUDecWCZswX3ApuG_a5FkTSbALGXx0LzsD1kbgmDWtlE5SKs5k9nu4Btmc7U3zBXzH6sS3Jb0UTZwSsWKBVyEqhpNQURGc7RSOXtHp6JQj_5hAdH39Dk8rTcutohpg_EBLRvfNK0zCFY8gIpYQbbIKoSKRXs-8FeENTlcHQ4W5hXPUZpr03dH0ybJX3jQVW9jNd40YcGnuiihNT141_jXRZvjUmMABJiPEo3uiZSMDxNCIGS1-n4RjOejvbVt-C6bvSrUKyJx8gbFdzOt6tHA0WXBFwcGv5bhTq8YY-LI0R_9y8xT1lsXiWbVgL6wyGzybBcCjRcWmW0BdbhkMpaxPoNhV4NTKwJyhI2emy-yXAan6EwqzLlaETFhGBOsZvrpMTXsAD-6p_Q80itqudeMHHjfpr6V7J8z8a_XTY3xowvlyVKCrKzW__g-DOU2FL5IJebtontK9HO0WeaypLdlocDscoWRuN4L8FqI6m9nNeNd8gfRDIDRn6yqd4nI6z9ZIcPNsbUiL90pbk-_S19MKgU5MhnpcCnfGfbSu_boT5Xs_oy2FLCO6HHibeNgXutAnTNKlj8TVoHWlwdzqUdl5rSlRTeAqLZYutVvQeX7GUL4HWR2H-zX9RY4QjdoDm7cFqZXvT6tXCCDvhw9t6EejyPC7P6z3nEG-Y0F0qBzIoNBLNnoBcg-yxEJW0737QXAT8AOpuOqi_k1oI120wfbZ5AhwxjmPD2FgxLYdmIeASBBqbHibPyRvc87PMsiURsp0p4r88QnAq_oHDmoAQaZEmiY-n7hUPTEcDC7aylUPTOUeHP7sM-v_eZfWakwuFALke-8yQSU_FHVLT1ICOSPT-NiGo4hZp0Mxm78JuKRVQKJmq7tXEp_RnlRWaR8dkGnNli-FdqaP9QCGHH9Sy4adi-YadAVz_s2q85sE6Vxx0mIkU8iknIjDXsCXDYNxbC8CK41d2y2umqnOKI3Moa_HzwHbjNtTy9jI6onDrNHWDzA_0JuNf7_nu1O7JF9iat5WMLECAuusfSA_D1OeB3n7If7ZG6LB6XsNYnwGsqeUFrSe5CktA8KMVkARvUNwLyIEAPFH4hCxnUCIA" +
+                                           "";
         private readonly HttpClient _httpClient;
 
         public DropboxStorageProvider()
@@ -16,7 +17,7 @@ namespace ConsoleWord.Application.Dropbox
         public async Task UploadFileAsync(string fileName, byte[] fileContent)
         {
             var uploadUrl = "https://content.dropboxapi.com/2/files/upload";
-            var folderPath = "/Documents"; // Без последнего '/'
+            var folderPath = "/Documents"; 
 
             using (var content = new ByteArrayContent(fileContent))
             {
@@ -24,13 +25,12 @@ namespace ConsoleWord.Application.Dropbox
 
                 var dropboxArg = new
                 {
-                    path = $"{folderPath}/{fileName}", // гарантировано один '/'
+                    path = $"{folderPath}/{fileName}", 
                     mode = "overwrite",
                     autorename = true,
                     mute = false
                 };
-
-                // Удаляем старый заголовок, если был
+                
                 if (_httpClient.DefaultRequestHeaders.Contains("Dropbox-API-Arg"))
                 {
                     _httpClient.DefaultRequestHeaders.Remove("Dropbox-API-Arg");
@@ -45,12 +45,12 @@ namespace ConsoleWord.Application.Dropbox
 
                 if (response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine($"✅ Файл '{fileName}' успешно загружен.");
+                    Console.WriteLine($" Файл '{fileName}' успешно загружен.");
                 }
                 else
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"❌ Ошибка при загрузке файла: {response.ReasonPhrase}");
+                    Console.WriteLine($" Ошибка при загрузке файла: {response.ReasonPhrase}");
                     Console.WriteLine($"Дополнительная информация: {errorContent}");
                 }
             }
@@ -60,8 +60,7 @@ namespace ConsoleWord.Application.Dropbox
         {
             var downloadUrl = "https://content.dropboxapi.com/2/files/download";
             var filePath = $"/Documents/{fileName}";
-
-            // Удаляем старый заголовок, если был
+            
             if (_httpClient.DefaultRequestHeaders.Contains("Dropbox-API-Arg"))
             {
                 _httpClient.DefaultRequestHeaders.Remove("Dropbox-API-Arg");
@@ -80,7 +79,7 @@ namespace ConsoleWord.Application.Dropbox
             }
             else
             {
-                Console.WriteLine($"❌ Ошибка при загрузке файла: {response.ReasonPhrase}");
+                Console.WriteLine($" Ошибка при загрузке файла: {response.ReasonPhrase}");
                 var errorContent = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"Дополнительная информация: {errorContent}");
                 return null;

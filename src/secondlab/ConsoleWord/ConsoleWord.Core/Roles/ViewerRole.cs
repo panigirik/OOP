@@ -1,5 +1,4 @@
-﻿using ConsoleWord.Core.Entities;
-
+﻿
 namespace ConsoleWord.Core.Roles;
 
 public class ViewerRole : UserRole

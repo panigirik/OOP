@@ -1,6 +1,7 @@
 ﻿using ConsoleWord.Core.Entities;
 using ConsoleWord.Core.Roles;
 using ConsoleWord.Application.Helpers;
+using ConsoleWord.Application.Interfaces;
 
 namespace ConsoleWord.Application.Services
 {

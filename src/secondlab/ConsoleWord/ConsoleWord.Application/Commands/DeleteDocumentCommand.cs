@@ -23,9 +23,9 @@
 
             try
             {
-                _backupContent = File.ReadAllText(_path); // сохраняем содержимое
+                _backupContent = File.ReadAllText(_path);
                 _extension = Path.GetExtension(_path);
-                File.Delete(_path); // удаляем файл
+                File.Delete(_path); 
                 _fileExistedBefore = true;
 
                 Console.WriteLine($"[Delete] File deleted: {_path}");
@@ -46,7 +46,7 @@
 
             try
             {
-                File.WriteAllText(_path, _backupContent); // восстанавливаем файл
+                File.WriteAllText(_path, _backupContent);
                 Console.WriteLine($"[Undo Delete] File restored: {_path}");
             }
             catch (Exception ex)

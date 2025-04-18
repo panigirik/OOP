@@ -48,7 +48,7 @@ private void AuthenticateUser()
 {
     AnsiConsole.MarkupLine("[bold]Please log in to continue.[/]");
 
-    int maxAttempts = 3;  // Define a maximum number of attempts
+    int maxAttempts = 3;  
     int attempts = 0;
 
     while (attempts < maxAttempts)
@@ -98,7 +98,7 @@ private void AuthenticateUser()
             if (attempts == maxAttempts)
             {
                 AnsiConsole.MarkupLine("[red]Maximum login attempts reached. Exiting authentication.[/]");
-                break;  // Exit the loop after max attempts
+                break;  
             }
         }
     }
@@ -131,7 +131,7 @@ private void AuthenticateUser()
     
     public void DeleteUserByUsername()
     {
-        string filePath = "users.txt"; // путь к файлу с пользователями
+        string filePath = "users.txt"; 
         if (!File.Exists(filePath))
         {
             AnsiConsole.MarkupLine("[red]User file not found.[/]");
@@ -142,8 +142,7 @@ private void AuthenticateUser()
 
         var lines = File.ReadAllLines(filePath).ToList();
         int originalCount = lines.Count;
-
-        // Удаляем строки, в которых имя пользователя совпадает с введённым
+        
         lines = lines.Where(line =>
         {
             var parts = line.Split(':');

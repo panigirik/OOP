@@ -16,24 +16,7 @@ public class StorageService
         _localStorage = localStorage;
         _cloudStorage = cloudStorage;
     }
-
-    public void SaveToLocal(Document doc, string path)
-    {
-        _localStorage.Save(doc, path);
-    }
-
-    public Document LoadFromLocal(string path)
-    {
-        return _localStorage.Load(path);
-    }
-
-    public async Task<Document> DownloadFromCloudAsync(string cloudPath)
-    {
-        byte[] fileBytes = await _cloudStorage.DownloadFileAsync(cloudPath);
-
-        using var stream = new MemoryStream(fileBytes);
-        return DocumentFactory.LoadFromStream(stream, cloudPath); // метод, распознающий формат по расширению
-    }
+    
 
     public async Task UploadToCloudAsync(Document document, string format)
     {

@@ -46,7 +46,7 @@ namespace ConsoleWord.Application.Services
             var format = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Choose format:")
-                    .AddChoices("docx", "xml", "json", "md")
+                    .AddChoices("docx", "xml", "json", "md", "txt")
             );
 
             var storageType = AnsiConsole.Prompt(
@@ -94,8 +94,8 @@ namespace ConsoleWord.Application.Services
         }
 
         
-            public void OpenAndEditDocument(User currentUser)
-            {
+        public void OpenAndEditDocument(User currentUser)
+        {
             string path = AnsiConsole.Ask<string>("Enter full file path to open:");
 
             if (!File.Exists(path))
@@ -157,8 +157,7 @@ namespace ConsoleWord.Application.Services
 
                         int cursorLine = 0;
                         int cursorCol = 0;
-
-                        // Prompt for color selection
+                        
                         string currentColor = AnsiConsole.Prompt(
                             new SelectionPrompt<string>()
                                 .Title("Choose a text color:")
@@ -167,8 +166,8 @@ namespace ConsoleWord.Application.Services
 
                         bool editing = true;
                         string inputSequence = string.Empty;
-                        string clipboard = string.Empty;  // Буфер обмена для копирования/вставки/вырезания
-                        (int, int)? selectionStart = null; // Начало выделения
+                        string clipboard = string.Empty; 
+                        (int, int)? selectionStart = null; 
 
                         while (editing)
                         {
@@ -176,8 +175,7 @@ namespace ConsoleWord.Application.Services
                             AnsiConsole.WriteLine($"--- Interactive Text Editor (ESC = Save, TAB = Exit, Arrows = Move, Typing = Insert) ---");
                             AnsiConsole.WriteLine($"Current color: {currentColor} at Line: {cursorLine + 1}, Col: {cursorCol + 1}");
                             AnsiConsole.WriteLine();
-
-                            // Set the color based on the selected value
+                            
                             Console.ForegroundColor = currentColor switch
                             {
                                 "red" => ConsoleColor.Red,
@@ -187,13 +185,11 @@ namespace ConsoleWord.Application.Services
                                 "white" => ConsoleColor.White,
                                 _ => ConsoleColor.White,
                             };
-
-                            // Display the content with the selected color for the entire text
+                            
                             for (int i = 0; i < contentLines.Count; i++)
                             {
                                 string line = contentLines[i];
-
-                                // Color entire line
+                                
                                 Console.ForegroundColor = currentColor switch
                                 {
                                     "red" => ConsoleColor.Red,
@@ -212,8 +208,7 @@ namespace ConsoleWord.Application.Services
                                     string before = line[..cursorCol];
                                     string cursorChar = line[cursorCol].ToString();
                                     string after = cursorCol + 1 < line.Length ? line[(cursorCol + 1)..] : "";
-
-                                    // Highlight the cursor position
+                                    
                                     Console.BackgroundColor = ConsoleColor.Black;
                                     Console.Write(before);
                                     Console.BackgroundColor = ConsoleColor.White;
@@ -223,14 +218,12 @@ namespace ConsoleWord.Application.Services
                                 }
                                 else
                                 {
-                                    // Display the entire line normally
                                     Console.WriteLine(line);
                                 }
                             }
 
                             var key = Console.ReadKey(true);
-
-                            // Allow exit by pressing Tab instead of "111"
+                            
                             if (key.Key == ConsoleKey.Tab)
                             {
                                 editing = false;
@@ -239,19 +232,17 @@ namespace ConsoleWord.Application.Services
 
                             switch (key.Key)
                             {
-                                case ConsoleKey.RightArrow when (key.Modifiers & ConsoleModifiers.Shift) != 0:
-                                    selectionStart ??= (cursorLine, cursorCol);
-                                    if (cursorCol < contentLines[cursorLine].Length)
-                                        cursorCol++;
-                                    else if (cursorLine < contentLines.Count - 1)
-                                    {
-                                        cursorLine++;
-                                        cursorCol = 0;
-                                    }
+                                case ConsoleKey.UpArrow:
+                                    if (cursorLine > 0) cursorLine--;
+                                    cursorCol = Math.Min(cursorCol, contentLines[cursorLine].Length);
                                     break;
 
-                                case ConsoleKey.LeftArrow when (key.Modifiers & ConsoleModifiers.Shift) != 0:
-                                    selectionStart ??= (cursorLine, cursorCol);
+                                case ConsoleKey.DownArrow:
+                                    if (cursorLine < contentLines.Count - 1) cursorLine++;
+                                    cursorCol = Math.Min(cursorCol, contentLines[cursorLine].Length);
+                                    break;
+
+                                case ConsoleKey.LeftArrow:
                                     if (cursorCol > 0)
                                         cursorCol--;
                                     else if (cursorLine > 0)
@@ -261,21 +252,13 @@ namespace ConsoleWord.Application.Services
                                     }
                                     break;
 
-                                case ConsoleKey.UpArrow when (key.Modifiers & ConsoleModifiers.Shift) != 0:
-                                    selectionStart ??= (cursorLine, cursorCol);
-                                    if (cursorLine > 0)
-                                    {
-                                        cursorLine--;
-                                        cursorCol = Math.Min(cursorCol, contentLines[cursorLine].Length);
-                                    }
-                                    break;
-
-                                case ConsoleKey.DownArrow when (key.Modifiers & ConsoleModifiers.Shift) != 0:
-                                    selectionStart ??= (cursorLine, cursorCol);
-                                    if (cursorLine < contentLines.Count - 1)
+                                case ConsoleKey.RightArrow:
+                                    if (cursorCol < contentLines[cursorLine].Length)
+                                        cursorCol++;
+                                    else if (cursorLine < contentLines.Count - 1)
                                     {
                                         cursorLine++;
-                                        cursorCol = Math.Min(cursorCol, contentLines[cursorLine].Length);
+                                        cursorCol = 0;
                                     }
                                     break;
 
@@ -309,161 +292,56 @@ namespace ConsoleWord.Application.Services
                                     break;
 
                                 case ConsoleKey.C when (key.Modifiers & ConsoleModifiers.Control) != 0:
-                                    if (selectionStart.HasValue)
-                                    {
-                                        var (startLine, startCol) = selectionStart.Value;
-                                        var (endLine, endCol) = (cursorLine, cursorCol);
-
-                                        if (startLine > endLine || (startLine == endLine && startCol > endCol))
-                                        {
-                                            (startLine, startCol, endLine, endCol) = (endLine, endCol, startLine, startCol);
-                                        }
-
-
-                                        clipboard = string.Join("\n",
-                                            contentLines
-                                                .Skip(startLine)
-                                                .Take(endLine - startLine + 1)
-                                                .Select((line, index) =>
-                                                {
-                                                    if (index == 0 && index == endLine - startLine)
-                                                        return line[startCol..endCol];
-                                                    if (index == 0)
-                                                        return line[startCol..];
-                                                    if (index == endLine - startLine)
-                                                        return line[..endCol];
-                                                    return line;
-                                                }));
-                                        AnsiConsole.MarkupLine("[green]Copied to clipboard.[/]");
-                                    }
+                                    clipboard = GetSelectedText(contentLines, selectionStart, cursorLine, cursorCol);
                                     break;
 
                                 case ConsoleKey.X when (key.Modifiers & ConsoleModifiers.Control) != 0:
-                                    if (selectionStart.HasValue)
-                                    {
-                                        var (startLine, startCol) = selectionStart.Value;
-                                        var (endLine, endCol) = (cursorLine, cursorCol);
-
-                                        if (startLine > endLine || (startLine == endLine && startCol > endCol))
-                                        {
-                                            (startLine, startCol, endLine, endCol) = (endLine, endCol, startLine, startCol);
-                                        }
-
-
-                                        clipboard = string.Join("\n",
-                                            contentLines
-                                                .Skip(startLine)
-                                                .Take(endLine - startLine + 1)
-                                                .Select((line, index) =>
-                                                {
-                                                    if (index == 0 && index == endLine - startLine)
-                                                        return line[startCol..endCol];
-                                                    if (index == 0)
-                                                        return line[startCol..];
-                                                    if (index == endLine - startLine)
-                                                        return line[..endCol];
-                                                    return line;
-                                                }));
-
-                                        // Remove selected text
-                                        if (startLine == endLine)
-                                        {
-                                            var line = contentLines[startLine];
-                                            contentLines[startLine] = line[..startCol] + line[endCol..];
-                                        }
-                                        else
-                                        {
-                                            var firstLine = contentLines[startLine][..startCol];
-                                            var lastLine = contentLines[endLine][endCol..];
-                                            contentLines.RemoveRange(startLine, endLine - startLine + 1);
-                                            contentLines.Insert(startLine, firstLine + lastLine);
-                                        }
-
-                                        cursorLine = startLine;
-                                        cursorCol = startCol;
-                                        selectionStart = null;
-
-                                        AnsiConsole.MarkupLine("[yellow]Cut to clipboard.[/]");
-                                    }
+                                    clipboard = GetSelectedText(contentLines, selectionStart, cursorLine, cursorCol);
+                                    RemoveSelectedText(ref contentLines, selectionStart, cursorLine, cursorCol, out clipboard);
                                     break;
 
+
                                 case ConsoleKey.V when (key.Modifiers & ConsoleModifiers.Control) != 0:
-                                    if (!string.IsNullOrEmpty(clipboard))
-                                    {
-                                        var lines = clipboard.Split('\n');
-                                        var current = contentLines[cursorLine];
-                                        var before = current[..cursorCol];
-                                        var after = current[cursorCol..];
-
-                                        contentLines[cursorLine] = before + lines[0];
-                                        for (int i = 1; i < lines.Length; i++)
-                                            contentLines.Insert(cursorLine + i, lines[i]);
-
-                                        if (lines.Length > 1)
-                                            contentLines[cursorLine + lines.Length - 1] += after;
-                                        else
-                                            contentLines[cursorLine] += after;
-
-                                        cursorLine += lines.Length - 1;
-                                        cursorCol = lines[^1].Length;
-
-                                        AnsiConsole.MarkupLine("[green]Pasted from clipboard.[/]");
-                                    }
+                                    InsertTextFromClipboard(ref contentLines, clipboard, ref cursorLine, ref cursorCol);
                                     break;
 
                                 default:
                                     if (!char.IsControl(key.KeyChar))
                                     {
-                                        string line = contentLines[cursorLine];
-                                        contentLines[cursorLine] = line.Insert(cursorCol, key.KeyChar.ToString());
+                                        var line = contentLines[cursorLine];
+                                        line = line.Insert(cursorCol, key.KeyChar.ToString());
+                                        contentLines[cursorLine] = line;
                                         cursorCol++;
                                     }
                                     break;
                             }
                         }
 
-                        // После редактирования сохранить изменения
-                        string finalText = string.Join('\n', contentLines);
+                        string finalText = string.Join("\n", contentLines);
+                        
+                        var appendCmd = extension == ".docx"
+                            ? new AppendTextCommand(path, finalText, _documentEditor)
+                            : new AppendTextCommand(path, finalText, _documentEditor, isTextFile: true);
 
-                        try
-                        {
-                            if (extension == ".docx")
-                                _documentEditor.OverwriteDocxFile(path, finalText);
-                            else
-                                _documentEditor.OverwriteTextFile(path, finalText);
-
-                            AnsiConsole.MarkupLine("[green]Document saved successfully.[/]");
-                        }
-                        catch (Exception ex)
-                        {
-                            AnsiConsole.MarkupLine($"[red]Failed to save the document: {ex.Message}[/]");
-                        }
-
-                        Console.ReadKey();
+                        _undoRedoService.ExecuteCommand(appendCmd);
                         break;
 
                     case "Delete All Text":
-                        _documentEditor.ClearDocxContent(path);
-                        AnsiConsole.MarkupLine("[yellow]All content deleted.[/]");
-                        Console.ReadKey();
-                        break;
-
-                    case "Show Content":
-                        Console.Clear();
-                        AnsiConsole.WriteLine(content);
-                        Console.ReadKey();
+                        var clearCmd = extension == ".docx"
+                            ? new ClearTextCommand(path, _documentEditor)
+                            : new ClearTextCommand(path, _documentEditor, isTextFile: true);
+                        _undoRedoService.ExecuteCommand(clearCmd);
                         break;
 
                     case "Undo":
                         _undoRedoService.Undo();
-                        AnsiConsole.MarkupLine("[yellow]Undo completed.[/]");
-                        Console.ReadKey();
                         break;
 
                     case "Redo":
                         _undoRedoService.Redo();
-                        AnsiConsole.MarkupLine("[yellow]Redo completed.[/]");
-                        Console.ReadKey();
+                        break;
+
+                    case "Show Content":
                         break;
 
                     case "Exit Edit":
@@ -473,70 +351,137 @@ namespace ConsoleWord.Application.Services
         }
 
 
+            
+        public void SearchTextInDocument(User currentUser)
+                {
+                    string path = AnsiConsole.Ask<string>("Enter full file path to open:");
+
+                    if (!File.Exists(path))
+                    {
+                        AnsiConsole.MarkupLine("[red]File not found.[/]");
+                        return;
+                    }
+
+                    string extension = Path.GetExtension(path).ToLower();
+
+                    if (extension != ".docx" && extension != ".txt" && extension != ".json" && extension != ".xml" && extension != ".md")
+                    {
+                        AnsiConsole.MarkupLine("[red]Unsupported file format. Supported formats: .docx, .txt, .json, .xml, .md[/]");
+                        return;
+                    }
+                    
+                    string content;
+                    try
+                    {
+                        content = extension == ".docx" ? _documentEditor.ReadDocxContent(path) : _documentEditor.ReadTextFileContent(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        AnsiConsole.MarkupLine($"[red]Failed to open document: {ex.Message}[/]");
+                        return;
+                    }
+                    
+                    Console.Clear();
+                    AnsiConsole.WriteLine(content);
+                    
+                    string searchTerm = AnsiConsole.Ask<string>("Enter the text you want to search for:");
+
+                    if (string.IsNullOrWhiteSpace(searchTerm))
+                    {
+                        AnsiConsole.MarkupLine("[red]Please enter a valid search term.[/]");
+                        return;
+                    }
+                    
+                    int index = content.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase);
+
+                    if (index == -1)
+                    {
+                        AnsiConsole.MarkupLine($"[yellow]No matches found for '{searchTerm}' in the document.[/]");
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine($"[green]Found '{searchTerm}' at position {index}.[/]");
+                        int start = Math.Max(0, index - 30);
+                        int length = Math.Min(60, content.Length - start);
+                        string snippet = content.Substring(start, length);
+
+                        AnsiConsole.MarkupLine($"[blue]...{snippet}...[/]");
+                    }
+                }
+
+
+
+
+    static string GetSelectedText(List<string> contentLines, (int, int)? selectionStart, int cursorLine, int cursorCol)
+    {
+        if (!selectionStart.HasValue)
+            return string.Empty;
+
+        var (startLine, startCol) = selectionStart.Value;
+        string selectedText = string.Empty;
+
+        if (startLine == cursorLine)
+        {
+            selectedText = contentLines[startLine].Substring(startCol, cursorCol - startCol);
+        }
+        else
+        {
+            // Multi-line selection can be implemented
+        }
+
+        return selectedText;
+    }
+
+    static void InsertTextFromClipboard(ref List<string> contentLines, string clipboard, ref int cursorLine, ref int cursorCol)
+    {
+        if (string.IsNullOrEmpty(clipboard))
+            return;
+
+        var line = contentLines[cursorLine];
+        contentLines[cursorLine] = line.Insert(cursorCol, clipboard);
+        cursorCol += clipboard.Length;
+    }
+
+    public static void RemoveSelectedText(ref List<string> contentLines, (int, int)? selectionStart, int cursorLine, int cursorCol, out string clipboardText)
+    {
+        clipboardText = string.Empty;
+
+        if (!selectionStart.HasValue)
+            return;
+
+        var (startLine, startCol) = selectionStart.Value;
         
-            public void SearchTextInDocument(User currentUser)
+        if (startLine == cursorLine)
+        {
+            clipboardText = contentLines[startLine].Substring(startCol, cursorCol - startCol);
+            
+            contentLines[startLine] = contentLines[startLine].Remove(startCol, cursorCol - startCol);
+        }
+        else
+        {
+            string selectedText = string.Empty;
+            
+            selectedText += contentLines[startLine].Substring(startCol);
+            
+            for (int i = startLine + 1; i < cursorLine; i++)
             {
-                string path = AnsiConsole.Ask<string>("Enter full file path to open:");
-
-                if (!File.Exists(path))
-                {
-                    AnsiConsole.MarkupLine("[red]File not found.[/]");
-                    return;
-                }
-
-                string extension = Path.GetExtension(path).ToLower();
-
-                if (extension != ".docx" && extension != ".txt" && extension != ".json" && extension != ".xml" && extension != ".md")
-                {
-                    AnsiConsole.MarkupLine("[red]Unsupported file format. Supported formats: .docx, .txt, .json, .xml, .md[/]");
-                    return;
-                }
-    
-                // Load and display the document content
-                string content;
-                try
-                {
-                    content = extension == ".docx" ? _documentEditor.ReadDocxContent(path) : _documentEditor.ReadTextFileContent(path);
-                }
-                catch (Exception ex)
-                {
-                    AnsiConsole.MarkupLine($"[red]Failed to open document: {ex.Message}[/]");
-                    return;
-                }
-
-                // Clear console and display content
-                Console.Clear();
-                AnsiConsole.WriteLine(content);
-    
-                // Prompt for the search term
-                string searchTerm = AnsiConsole.Ask<string>("Enter the text you want to search for:");
-
-                if (string.IsNullOrWhiteSpace(searchTerm))
-                {
-                    AnsiConsole.MarkupLine("[red]Please enter a valid search term.[/]");
-                    return;
-                }
-
-                // Search for the term in the content
-                int index = content.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase);
-
-                if (index == -1)
-                {
-                    AnsiConsole.MarkupLine($"[yellow]No matches found for '{searchTerm}' in the document.[/]");
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine($"[green]Found '{searchTerm}' at position {index}.[/]");
-                    // Display the text surrounding the search term
-                    int start = Math.Max(0, index - 30);
-                    int length = Math.Min(60, content.Length - start);
-                    string snippet = content.Substring(start, length);
-
-                    AnsiConsole.MarkupLine($"[blue]...{snippet}...[/]");
-                }
+                selectedText += contentLines[i] + Environment.NewLine; 
             }
-
-
+            
+            selectedText += contentLines[cursorLine].Substring(0, cursorCol);
+            
+            clipboardText = selectedText;
+            
+            contentLines[startLine] = contentLines[startLine].Remove(startCol);
+            
+            for (int i = startLine + 1; i < cursorLine; i++)
+            {
+                contentLines[i] = string.Empty;
+            }
+            
+            contentLines[cursorLine] = contentLines[cursorLine].Substring(cursorCol);
+        }
+    }
         
     }
 }

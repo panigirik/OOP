@@ -16,8 +16,4 @@
       <ProjectReference Include="..\ConsoleWord.Application\ConsoleWord.Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="CommandsTests\" />
-    </ItemGroup>
-
 </Project>

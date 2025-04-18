@@ -22,18 +22,6 @@ public class DocumentFactory
         _storageService = storageService;
     }
     
-    public Document CreateDocument(string documentName, string documentText, string font, int textSize, bool isBold, bool isItalic, bool isUnderline)
-    {
-        var document = new Document(documentName, documentText, font, textSize)
-        {
-            IsBold = isBold,
-            IsItalic = isItalic,
-            IsUnderline = isUnderline
-        };
-
-        return document;
-    }
-    
     public static Document LoadFromStream(Stream stream, string fileName)
     {
         var extension = Path.GetExtension(fileName).ToLowerInvariant();
@@ -93,39 +81,7 @@ public class DocumentFactory
             Content = new StringBuilder(content) 
         };
     }
-
     
-    public string SaveDocument(Document document, string directory, string format)
-    {
-        string filePath = Path.Combine(directory, document.Name + $".{format}");
-        try
-        {
-            switch (format)
-            {
-                case "docx":
-                    SaveAsDocx(document, filePath);
-                    break;
-                case "xml":
-                    SaveAsXml(document, filePath);
-                    break;
-                case "json":
-                    SaveAsJson(document, filePath);
-                    break;
-                case "md":
-                    SaveAsMarkdown(document, filePath);
-                    break;
-                default:
-                    Console.WriteLine("Invalid format selected.");
-                    return null;
-            }
-            return filePath;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error saving document: {ex.Message}");
-            return null;
-        }
-    }
 
     public static void SaveAsDocx(Document document, Stream outputStream)
     {
@@ -205,6 +161,11 @@ public class DocumentFactory
         writer.WriteLine(content);
     }
 
+    public void SaveAsTxt(Document document, string filePath)
+    {
+        string content = document.Content.ToString();
+        File.WriteAllText(filePath, content);
+    }
     
     public void SaveAsXml(Document document, string filePath)
     {
@@ -216,13 +177,7 @@ public class DocumentFactory
 
         Console.WriteLine($"Document saved as XML successfully: {filePath}");
     }
-
-    public void SaveDocumentToCloud(Document document, string format)
-    {
-        _storageService.UploadToCloudAsync(document, format);
-        Console.WriteLine("Document uploaded to cloud (stub).");
-    }
-
+    
     
     public void SaveAsJson(Document document, string filePath)
     {

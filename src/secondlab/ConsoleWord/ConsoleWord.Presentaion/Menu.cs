@@ -1,5 +1,4 @@
-﻿using ConsoleWord.Application.DocumentUseCases;
-using ConsoleWord.Application.Helpers;
+﻿using ConsoleWord.Application.Helpers;
 using ConsoleWord.Application.Services;
 using ConsoleWord.Core.Entities;
 using Spectre.Console;
@@ -9,35 +8,29 @@ namespace ConsoleWord
     public class Menu
     {
         private readonly DocumentService _documentService;
-        private readonly AuthenticationService _authenticationService;
-        private readonly NotificationService _notificationService;
-        private readonly DocumentStorageService _documentStorageService;
-        private readonly DocumentEditor _documentEditor;
+        private readonly SaveDocumentToCloudHelper _documentToCloudHelper;
         private readonly UndoRedoService _undoRedoService;
         private readonly NotifySubscribersHelper _notifySubscribersHelper;
         public User _currentUser;
         private readonly ShowAuthenticationOptionsHepler _showAuthentication;
         private readonly PermissionManager _permissionManager;
+        private readonly EditorSettings _editorSettings;
         
         public Menu(DocumentService documentService, 
-            AuthenticationService authenticationService,
-            NotificationService notificationService,
-            DocumentStorageService documentStorageService,
-            DocumentEditor documentEditor,
             UndoRedoService undoRedoService,
             NotifySubscribersHelper notifySubscribersHelper,
             ShowAuthenticationOptionsHepler showAuthentication,
-            PermissionManager permissionManager)
+            PermissionManager permissionManager,
+            SaveDocumentToCloudHelper documentToCloudHelper,
+            EditorSettings editorSettings)
         {
             _documentService = documentService;
-            _authenticationService = authenticationService;
-            _notificationService = notificationService;
-            _documentStorageService = documentStorageService;
-            _documentEditor = documentEditor;
             _undoRedoService = undoRedoService;
             _notifySubscribersHelper = notifySubscribersHelper;
             _showAuthentication = showAuthentication;
             _permissionManager = permissionManager;
+            _documentToCloudHelper = documentToCloudHelper;
+            _editorSettings = editorSettings;
         }
 
         public void Show()
@@ -80,8 +73,6 @@ namespace ConsoleWord
                 {
                     options.Add("Open document");
                     options.Add("searchText");
-                    options.Add("Undo");
-                    options.Add("Redo");
                 }
 
                 if (_currentUser.Role.HasPermission("Edit"))
@@ -93,7 +84,7 @@ namespace ConsoleWord
                 }
 
 
-                
+                options.Add("Editor Settings");
                 options.Add("Logout");
                 options.Add("Subscribe to user");
                 options.Add("Exit");
@@ -122,6 +113,7 @@ namespace ConsoleWord
 
                     case "deleteUserByUsername":
                         _showAuthentication.DeleteUserByUsername();
+                        _notifySubscribersHelper.NotifySubscribers(_currentUser.Username, $"{_currentUser.Username} delete some users.");
                         break;
                     
                     case "ManagePermissions":
@@ -135,7 +127,7 @@ namespace ConsoleWord
 
                     case "Delete Document":
                         _documentService.DeleteDocumentByPath();
-                        _notifySubscribersHelper.NotifySubscribers(_currentUser.Username, $"{_currentUser.Username} edit document.");
+                        _notifySubscribersHelper.NotifySubscribers(_currentUser.Username, $"{_currentUser.Username} delete document.");
                         break;
                     
                     case "Undo":
@@ -149,10 +141,13 @@ namespace ConsoleWord
                         break;
                     
                     case "Save document to cloud":
-                        SaveDocumentToCloud();
+                        _documentToCloudHelper.SaveDocumentToCloud();
                         _notifySubscribersHelper.NotifySubscribers(_currentUser.Username, $"{_currentUser.Username} saved a document to the cloud.");
                         break;
 
+                    case "Editor Settings":
+                        _editorSettings.ConfigureEditorSettings();
+                        break;
 
                     
                     case "Logout":
@@ -175,79 +170,12 @@ namespace ConsoleWord
 
 
 
-        private void SaveDocumentToCloud()
-        {
-            var filePath = AnsiConsole.Ask<string>("Enter the [green]path[/] to the .docx file you want to upload:");
-
-            if (!File.Exists(filePath))
-            {
-                AnsiConsole.MarkupLine("[red]File not found.[/]");
-                return;
-            }
-            
-            var format = AnsiConsole.Ask<string>("Enter the [green]format[/] for the document (e.g., 'docx'):");
-            
-            Document document = _documentEditor.LoadDocument(filePath); 
-
-            _documentStorageService.SaveDocumentToCloud(document, format);
-
-            AnsiConsole.MarkupLine("[green]Document saved to cloud successfully.[/]");
-        }
-
-        
-        private void AuthenticateUser()
-        {
-            AnsiConsole.MarkupLine("[bold]Please log in to continue.[/]");
-
-            while (true)
-            {
-                string username = AnsiConsole.Ask<string>("Enter [green]Username[/]:");
-                string password = AnsiConsole.Prompt(
-                    new TextPrompt<string>("Enter [green]Password[/]:")
-                        .PromptStyle("red")
-                        .Secret());
-
-                _currentUser = _authenticationService.Authenticate(username, password);
-
-                if (_currentUser != null)
-                {
-                    AnsiConsole.MarkupLine($"[green]Welcome, {_currentUser.Username}![/] Logged in as [blue]{_currentUser.Role.RoleName}[/].");
-
-
-                    var notifications = _notificationService.GetUserNotifications(_currentUser.Username);
-
-                    if (notifications.Any())
-                    {
-                        AnsiConsole.MarkupLine($"\n[bold underline fuchsia]You have {notifications.Count} new notification(s):[/]");
-
-                        foreach (var note in notifications)
-                        {
-                            AnsiConsole.Write(
-                                new Panel($"[white]{note}[/]")
-                                    .Border(BoxBorder.Double)
-                                    .BorderStyle(new Style(foreground: Color.Fuchsia))
-                                    .Padding(1, 0, 1, 0)
-                            );
-                        }
-
-                        _notificationService.ClearUserNotifications(_currentUser.Username);
-                    }
-                    else
-                    {
-                        AnsiConsole.MarkupLine("\n[gray]No new notifications.[/]");
-                    }
-
-                    break;
-                }
-            }
-        }
 
 
         private void Logout()
         {
             _currentUser = _showAuthentication.ShowAuthenticationOptions();
             AnsiConsole.MarkupLine("[gray]You have been logged out.[/]");
-            //_showAuthentication.ShowAuthenticationOptions();
         }
         
         private void SubscribeToUser()

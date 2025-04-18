@@ -52,15 +52,12 @@ public class DocumentEditor
         {
             throw new FileNotFoundException($"Document not found at {filePath}");
         }
-
-        // Используем метод из DocumentEditor для чтения содержимого документа
+        
         string documentText = ReadDocxContent(filePath);
-
-        // Получаем имя документа
+        
         string documentName = Path.GetFileNameWithoutExtension(filePath);
-
-        // Возвращаем объект Document с полученным содержимым
-        var document = new Document(documentName, documentText, "Arial", 12); // Можно использовать другие параметры
+        
+        var document = new Document(documentName, documentText, "Arial", 12); 
         return document;
     }
 
@@ -74,7 +71,7 @@ public class DocumentEditor
         using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(path, true))
         {
             var body = wordDoc.MainDocumentPart.Document.Body;
-            body.RemoveAllChildren(); // удаляем всё старое
+            body.RemoveAllChildren(); 
 
             Paragraph paragraph = new Paragraph();
             Run run = new Run();

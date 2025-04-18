@@ -40,6 +40,9 @@ public class DocumentStorageService
                 case "md":
                     _documentFactory.SaveAsMarkdown(document, filePath);
                     break;
+                case "txt":
+                    _documentFactory.SaveAsTxt(document, filePath);
+                    break;
                 default:
                     Console.WriteLine("Invalid format selected.");
                     return null;

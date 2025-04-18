@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
@@ -48,31 +47,7 @@ namespace ConsoleWord.Core.Entities
             return wordDoc.MainDocumentPart.Document.Body;
         }
         
-        public virtual void DeleteText(int startIndex, int length)
-        {
-            if (startIndex >= 0 && startIndex < Content.Length && length > 0)
-            {
-                Content.Remove(startIndex, Math.Min(length, Content.Length - startIndex));
-            }
-        }
         
-        public virtual void FormatBold()
-        {
-            Content.Insert(0, "**");
-            Content.Append("**");
-        }
-        
-        public virtual void FormatItalic()
-        {
-            Content.Insert(0, "*");
-            Content.Append("*");
-        }
-        
-        public virtual void FormatUnderline()
-        {
-            Content.Insert(0, "__");
-            Content.Append("__");
-        }
 
         public override string ToString() => Content.ToString();
     }

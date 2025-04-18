@@ -12,9 +12,11 @@ Support for copy, cut, and paste operations.
 3. Undo/Redo System
 Implement undo/redo functionality for text modifications.
 4. Storage Options
-Store documents in local files and cloud.
+Store documents in local files and cloud(dropBox).
 5. User Roles & Permissions
 Viewer (read-only), Editor (edit access), Admin (manage users & permissions).
 Notify users of document changes.
 6. Settings & Customization
 Manage global editor settings such as theme and font size.
+7. Manage color/fontSize setting (allUsers can manage).
+8. Set of test cases (helpers funtions)

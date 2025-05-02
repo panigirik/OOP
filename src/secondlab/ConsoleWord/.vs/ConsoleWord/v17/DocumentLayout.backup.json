@@ -1,0 +1,65 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Admin\\RiderProjects\\ConsoleWord\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7E4C8324-4426-4D13-8F54-8C4D51EC6865}|ConsoleWord.Presentaion\\ConsoleWord.Presentaion.csproj|c:\\users\\admin\\riderprojects\\consoleword\\consoleword.presentaion\\editorsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7E4C8324-4426-4D13-8F54-8C4D51EC6865}|ConsoleWord.Presentaion\\ConsoleWord.Presentaion.csproj|solutionrelative:consoleword.presentaion\\editorsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:5:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EditorSettings.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\RiderProjects\\ConsoleWord\\ConsoleWord.Presentaion\\EditorSettings.cs",
+              "RelativeDocumentMoniker": "ConsoleWord.Presentaion\\EditorSettings.cs",
+              "ToolTip": "C:\\Users\\Admin\\RiderProjects\\ConsoleWord\\ConsoleWord.Presentaion\\EditorSettings.cs",
+              "RelativeToolTip": "ConsoleWord.Presentaion\\EditorSettings.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T06:32:43.977Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

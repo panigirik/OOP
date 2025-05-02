@@ -1,0 +1,14 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=308a80b6_002Db35f_002D46e5_002D8c76_002D72485c8f58de/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AddStudentHandlerTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::8B3BB11F-BE94-4B03-A16C-7FB440390158::net8.0-windows::Tests.AddStudentHandlerTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::8B3BB11F-BE94-4B03-A16C-7FB440390158::net8.0-windows::Tests.StudentValidationHandlerTest.ValidateLoginRequestAsync_InvalidDto_ThrowsValidationException&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::8B3BB11F-BE94-4B03-A16C-7FB440390158::net8.0-windows::Tests.QuoteAPIHandlerTest.GetMotivationalQuoteAsync_ApiReturnsResponse_MapsToDto&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::8B3BB11F-BE94-4B03-A16C-7FB440390158::net8.0-windows::Tests.QuoteAPIHandlerTest.GetMotivationalQuoteAsync_ApiReturnsNull_ReturnsNull&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=9716e87c_002D84d3_002D4bae_002Db940_002D3a67426060e5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ValidateLoginRequestAsync_InvalidDto_ThrowsValidationException" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::8B3BB11F-BE94-4B03-A16C-7FB440390158::net8.0-windows::Tests.StudentValidationHandlerTest.ValidateLoginRequestAsync_InvalidDto_ThrowsValidationException&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

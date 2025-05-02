@@ -1,0 +1,7 @@
+admin:viewer
+admin:zahar
+viewer:zahar
+viewer:admin
+admin:editor
+edit:admin
+zahar:admin

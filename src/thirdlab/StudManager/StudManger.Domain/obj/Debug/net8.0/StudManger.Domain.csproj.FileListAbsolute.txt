@@ -1,0 +1,12 @@
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\bin\Debug\net8.0\StudManger.Domain.deps.json
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\bin\Debug\net8.0\StudManger.Domain.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\bin\Debug\net8.0\StudManger.Domain.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\obj\Debug\net8.0\StudManger.Domain.csproj.AssemblyReference.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\obj\Debug\net8.0\StudManger.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\obj\Debug\net8.0\StudManger.Domain.AssemblyInfoInputs.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\obj\Debug\net8.0\StudManger.Domain.AssemblyInfo.cs
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\obj\Debug\net8.0\StudManger.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\obj\Debug\net8.0\StudManger.Domain.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\obj\Debug\net8.0\refint\StudManger.Domain.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\obj\Debug\net8.0\StudManger.Domain.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManger.Domain\obj\Debug\net8.0\ref\StudManger.Domain.dll

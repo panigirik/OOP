@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "jpIOu9dai0Bbosenbv+K1OHW8np7yoc40dlekrpEGMFDUiFIDMz2Hc3WGFqeENWbgtwxyrVJG0kbYGFXXDwguA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Admin\\RiderProjects\\ConsoleWord\\ConsoleWord.Infrastracture\\ConsoleWord.Infrastracture.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\V\\awssdk.core\\3.7.402.20\\awssdk.core.3.7.402.20.nupkg.sha512",
+    "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\V\\awssdk.s3\\3.7.415.19\\awssdk.s3.3.7.415.19.nupkg.sha512",
+    "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\V\\documentformat.openxml\\3.3.0\\documentformat.openxml.3.3.0.nupkg.sha512",
+    "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\V\\documentformat.openxml.framework\\3.3.0\\documentformat.openxml.framework.3.3.0.nupkg.sha512",
+    "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\V\\system.io.packaging\\8.0.1\\system.io.packaging.8.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

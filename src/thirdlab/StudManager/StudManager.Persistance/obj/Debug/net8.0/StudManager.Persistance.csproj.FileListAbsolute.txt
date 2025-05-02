@@ -1,0 +1,15 @@
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\bin\Debug\net8.0\StudManager.Persistance.deps.json
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\bin\Debug\net8.0\StudManager.Persistance.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\bin\Debug\net8.0\StudManager.Persistance.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\bin\Debug\net8.0\StudManger.Domain.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\bin\Debug\net8.0\StudManger.Domain.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\obj\Debug\net8.0\StudManager.Persistance.csproj.AssemblyReference.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\obj\Debug\net8.0\StudManager.Persistance.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\obj\Debug\net8.0\StudManager.Persistance.AssemblyInfoInputs.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\obj\Debug\net8.0\StudManager.Persistance.AssemblyInfo.cs
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\obj\Debug\net8.0\StudManager.Persistance.csproj.CoreCompileInputs.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\obj\Debug\net8.0\StudMana.28B0DBA7.Up2Date
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\obj\Debug\net8.0\StudManager.Persistance.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\obj\Debug\net8.0\refint\StudManager.Persistance.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\obj\Debug\net8.0\StudManager.Persistance.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Persistance\obj\Debug\net8.0\ref\StudManager.Persistance.dll

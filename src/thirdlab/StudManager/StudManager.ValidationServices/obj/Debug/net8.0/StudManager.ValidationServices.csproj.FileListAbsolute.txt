@@ -1,0 +1,17 @@
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\bin\Debug\net8.0\StudManager.ValidationServices.deps.json
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\bin\Debug\net8.0\StudManager.ValidationServices.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\bin\Debug\net8.0\StudManager.ValidationServices.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\bin\Debug\net8.0\StudManager.Application.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\bin\Debug\net8.0\StudManger.Domain.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\bin\Debug\net8.0\StudManager.Application.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\bin\Debug\net8.0\StudManger.Domain.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\obj\Debug\net8.0\StudManager.ValidationServices.csproj.AssemblyReference.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\obj\Debug\net8.0\StudManager.ValidationServices.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\obj\Debug\net8.0\StudManager.ValidationServices.AssemblyInfoInputs.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\obj\Debug\net8.0\StudManager.ValidationServices.AssemblyInfo.cs
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\obj\Debug\net8.0\StudManager.ValidationServices.csproj.CoreCompileInputs.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\obj\Debug\net8.0\StudMana.BEA32281.Up2Date
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\obj\Debug\net8.0\StudManager.ValidationServices.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\obj\Debug\net8.0\refint\StudManager.ValidationServices.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\obj\Debug\net8.0\StudManager.ValidationServices.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManager.ValidationServices\obj\Debug\net8.0\ref\StudManager.ValidationServices.dll

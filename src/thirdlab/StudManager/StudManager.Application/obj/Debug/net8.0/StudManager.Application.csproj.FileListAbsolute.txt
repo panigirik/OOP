@@ -1,0 +1,15 @@
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\bin\Debug\net8.0\StudManager.Application.deps.json
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\bin\Debug\net8.0\StudManager.Application.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\bin\Debug\net8.0\StudManager.Application.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\bin\Debug\net8.0\StudManger.Domain.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\bin\Debug\net8.0\StudManger.Domain.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\obj\Debug\net8.0\StudManager.Application.csproj.AssemblyReference.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\obj\Debug\net8.0\StudManager.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\obj\Debug\net8.0\StudManager.Application.AssemblyInfoInputs.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\obj\Debug\net8.0\StudManager.Application.AssemblyInfo.cs
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\obj\Debug\net8.0\StudManager.Application.csproj.CoreCompileInputs.cache
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\obj\Debug\net8.0\StudMana.254817F9.Up2Date
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\obj\Debug\net8.0\StudManager.Application.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\obj\Debug\net8.0\refint\StudManager.Application.dll
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\obj\Debug\net8.0\StudManager.Application.pdb
+C:\Users\Admin\RiderProjects\StudManager\StudManager.Application\obj\Debug\net8.0\ref\StudManager.Application.dll

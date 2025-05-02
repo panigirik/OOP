@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "hOn6h/gj+rdzNk7H87kGg2OMYFiHrj6lmvYpPxaXBVf4ckQv9jXDtb/xxphz8BEpJAB3NVNOLlctFLdtzyUeNw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Admin\\RiderProjects\\ConsoleWord\\ConsoleWord.Core\\ConsoleWord.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\V\\documentformat.openxml\\3.3.0\\documentformat.openxml.3.3.0.nupkg.sha512",
+    "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\V\\documentformat.openxml.framework\\3.3.0\\documentformat.openxml.framework.3.3.0.nupkg.sha512",
+    "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\V\\system.io.packaging\\8.0.1\\system.io.packaging.8.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

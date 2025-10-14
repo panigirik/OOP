@@ -1,0 +1,14 @@
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\bin\Debug\net8.0\ConsolePaint.exe
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\bin\Debug\net8.0\ConsolePaint.deps.json
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\bin\Debug\net8.0\ConsolePaint.runtimeconfig.json
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\bin\Debug\net8.0\ConsolePaint.dll
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\bin\Debug\net8.0\ConsolePaint.pdb
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\obj\Debug\net8.0\ConsolePaint.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\obj\Debug\net8.0\ConsolePaint.AssemblyInfoInputs.cache
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\obj\Debug\net8.0\ConsolePaint.AssemblyInfo.cs
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\obj\Debug\net8.0\ConsolePaint.csproj.CoreCompileInputs.cache
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\obj\Debug\net8.0\ConsolePaint.dll
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\obj\Debug\net8.0\refint\ConsolePaint.dll
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\obj\Debug\net8.0\ConsolePaint.pdb
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\obj\Debug\net8.0\ConsolePaint.genruntimeconfig.cache
+C:\Users\Admin\RiderProjects\ConsolePaint\ConsolePaint\obj\Debug\net8.0\ref\ConsolePaint.dll
